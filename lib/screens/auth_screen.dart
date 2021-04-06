@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:vip_chat_app/constants.dart';
+import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
 import 'package:vip_chat_app/widgets/customized_icon_animated_button.dart';
 import 'package:vip_chat_app/widgets/customized_medium_animated_button.dart';
@@ -25,7 +26,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _showSpinner = false;
   bool _isLoginMode;
-  String _userName;
+  String _username;
   String _email;
   String _password;
 
@@ -51,14 +52,25 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       if (_isLoginMode) {
         authResult = await _auth.signInWithEmailAndPassword(
-            email: _email.trim(), password: _password.trim());
+          email: _email.trim(),
+          password: _password.trim(),
+        );
         if (authResult != null) {
           Navigator.pushNamedAndRemoveUntil(
               context, ChatScreen.id, (route) => false);
         }
       } else {
         final authResult = await _auth.createUserWithEmailAndPassword(
-            email: _email.trim(), password: _password.trim());
+          email: _email.trim(),
+          password: _password.trim(),
+        );
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(authResult.user.uid)
+            .set({
+          'username': _username,
+          'email': _email,
+        });
         if (authResult != null) {
           Navigator.pushNamedAndRemoveUntil(
               context, ChatScreen.id, (route) => false);
@@ -126,7 +138,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     Colors.purpleAccent,
                   ],
                 ),
-                Text('or use'),
+                Text('or SIGN IN with'),
                 CustomizedIconAnimatedButton(
                   title: 'Facebook',
                   onTap: () {},
@@ -165,7 +177,9 @@ class _AuthScreenState extends State<AuthScreen> {
               validator: (val) {
                 return val.length > 3 ? null : "Enter 3+ characters";
               },
-              onChanged: (value) {},
+              onChanged: (value) {
+                _username = value;
+              },
             ),
           CustomizedWhiteTextField(
             key: ValueKey('email'),
@@ -214,9 +228,10 @@ class _AuthScreenState extends State<AuthScreen> {
         padding: EdgeInsets.only(right: 10.0),
         child: CustomizedTextButton(
           title: 'Forgot Password?',
-          onPressed: () {},
           fontSize: 13,
+          color: Colors.blue,
           fontWeight: FontWeight.w600,
+          onPressed: () {},
         ),
       ),
     );
@@ -227,7 +242,6 @@ class _AuthScreenState extends State<AuthScreen> {
       onTap: () {
         setState(() {
           _isLoginMode = !_isLoginMode;
-          print(_isLoginMode);
         });
       },
       child: MouseRegion(

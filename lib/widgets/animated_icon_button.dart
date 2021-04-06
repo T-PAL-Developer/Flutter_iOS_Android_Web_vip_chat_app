@@ -80,56 +80,60 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
   @override
   Widget build(BuildContext context) {
     _scale = 1 - _animationController.value;
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (details) {
+    return MouseRegion(
+      onHover: (config) {
         _animationController.forward();
       },
-      onTapCancel: () {
+      onExit: (config) {
         _animationController.reverse();
       },
-      onTapUp: (details) {
-        _animationController.reverse();
-      },
-      child: Transform.scale(
-        scale: _scale,
-        child: buttonBody(),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (details) {
+          _animationController.forward();
+        },
+        onTapCancel: () {
+          _animationController.reverse();
+        },
+        onTapUp: (details) {
+          _animationController.reverse();
+        },
+        child: Transform.scale(
+          scale: _scale,
+          child: buttonBody(),
+        ),
       ),
     );
   }
 
   Widget buttonBody() {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: Container(
-        height: (widget.height != null) ? widget.height : 70,
-        width: (widget.width != null) ? widget.width : 200,
-
-        ///
-        decoration: boxDecoration(),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              widget.icon,
-              SizedBox(
-                width: 10.0,
+    return Container(
+      height: (widget.height != null) ? widget.height : 70,
+      width: (widget.width != null) ? widget.width : 200,
+      decoration: boxDecoration(),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            widget.icon,
+            SizedBox(
+              width: 10.0,
+            ),
+            Text(
+              (widget.title != null) ? widget.title : "animated icon button",
+              style: TextStyle(
+                fontFamily: widget.fontFamily,
+                fontSize: (widget.titleSize != null) ? widget.titleSize : 20,
+                fontWeight: (widget.fontWeight != null)
+                    ? widget.fontWeight
+                    : FontWeight.w500,
+                color: (widget.titleColor != null)
+                    ? widget.titleColor
+                    : Colors.black,
               ),
-              Text(
-                (widget.title != null) ? widget.title : "animated icon button",
-                style: TextStyle(
-                  fontFamily: widget.fontFamily,
-                  fontSize: (widget.titleSize != null) ? widget.titleSize : 20,
-                  fontWeight: (widget.fontWeight != null)
-                      ? widget.fontWeight
-                      : FontWeight.w500,
-                  color: (widget.titleColor != null)
-                      ? widget.titleColor
-                      : Colors.black,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

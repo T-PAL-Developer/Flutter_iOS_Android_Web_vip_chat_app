@@ -2,7 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vip_chat_app/constants.dart';
+import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
 import 'package:vip_chat_app/widgets/customized_big_animated_button.dart';
 import 'package:vip_chat_app/widgets/customized_text_button.dart';
@@ -81,7 +81,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         text: ['YOURS', 'VIP', 'CHAT'],
         textStyle: TextStyle(
           fontSize: 50.0,
-          fontFamily: 'BungeeShade',
+          fontFamily: kFontBungeeShade,
           fontWeight: FontWeight.bold,
         ),
         colors: [
@@ -162,6 +162,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                   CustomizedTextButton(
                     title: 'as an Anonymous User',
+                    color: Colors.blue,
+                    fontFamily: kFontSourceSansPro,
+                    fontSize: 17.0,
                     onPressed: () async {
                       setState(() {
                         _showSpinner = true;
@@ -179,8 +182,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         print(e);
                       }
                     },
-                    fontFamily: kFontSourceSansPro,
-                    fontWeight: FontWeight.bold,
                   ),
                 ],
               ),

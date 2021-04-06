@@ -76,46 +76,49 @@ class _AnimatedButtonState extends State<AnimatedButton>
   @override
   Widget build(BuildContext context) {
     _scale = 1 - _animationController.value;
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (details) {
+    return MouseRegion(
+      onHover: (config) {
         _animationController.forward();
       },
-      onTapCancel: () {
+      onExit: (config) {
         _animationController.reverse();
       },
-      onTapUp: (details) {
-        _animationController.reverse();
-      },
-      child: Transform.scale(
-        scale: _scale,
-        child: buttonBody(),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (details) {
+          _animationController.forward();
+        },
+        onTapCancel: () {
+          _animationController.reverse();
+        },
+        onTapUp: (details) {
+          _animationController.reverse();
+        },
+        child: Transform.scale(
+          scale: _scale,
+          child: buttonBody(),
+        ),
       ),
     );
   }
 
   Widget buttonBody() {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: Container(
-        height: (widget.height != null) ? widget.height : 70,
-        width: (widget.width != null) ? widget.width : 200,
-
-        ///
-        decoration: boxDecoration(),
-        child: Center(
-          child: Text(
-            (widget.title != null) ? widget.title : "animated button",
-            style: TextStyle(
-              fontFamily: widget.fontFamily,
-              fontSize: (widget.titleSize != null) ? widget.titleSize : 20,
-              fontWeight: (widget.fontWeight != null)
-                  ? widget.fontWeight
-                  : FontWeight.w500,
-              color: (widget.titleColor != null)
-                  ? widget.titleColor
-                  : Colors.black,
-            ),
+    return Container(
+      height: (widget.height != null) ? widget.height : 70,
+      width: (widget.width != null) ? widget.width : 200,
+      decoration: boxDecoration(),
+      child: Center(
+        child: Text(
+          (widget.title != null) ? widget.title : "animated button",
+          style: TextStyle(
+            fontFamily: widget.fontFamily,
+            fontSize: (widget.titleSize != null) ? widget.titleSize : 20,
+            fontWeight: (widget.fontWeight != null)
+                ? widget.fontWeight
+                : FontWeight.w500,
+            color:
+                (widget.titleColor != null) ? widget.titleColor : Colors.black,
           ),
         ),
       ),

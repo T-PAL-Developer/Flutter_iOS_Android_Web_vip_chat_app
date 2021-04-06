@@ -1,10 +1,11 @@
+import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:vip_chat_app/constants.dart';
+import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vip_chat_app/screens/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:vip_chat_app/widgets/customized_text_button.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User _loggedInUser;
@@ -17,8 +18,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  // int _selectedBottomBarItemPosition = 0;
-
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   DateTime _now;
@@ -55,112 +54,165 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
-        leading: null,
-        actions: <Widget>[
-          IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.signOutAlt,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                _auth.signOut();
-                Navigator.pushReplacementNamed(context, WelcomeScreen.id);
-              }),
-        ],
-        title: Text(
-          '️Chat',
-          style: TextStyle(
-              fontFamily: kFontBungeeShade,
-              fontWeight: FontWeight.bold,
-              color: Colors.black),
-        ),
-        backgroundColor: Colors.lightBlueAccent,
+    return AnimatedDrawer(
+      homePageXValue: 150,
+      homePageYValue: 80,
+      homePageAngle: -0.2,
+      homePageSpeed: 250,
+      shadowXValue: 122,
+      shadowYValue: 110,
+      shadowAngle: -0.275,
+      shadowSpeed: 350,
+      openIcon: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(Icons.menu_open, color: Colors.black),
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            MessagesStream(),
-            Container(
-              decoration: kMessageContainerDecoration,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      textInputAction: TextInputAction.search,
-                      controller: messageTextController,
-                      decoration: kMessageTextFieldDecoration,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: kFontSourceSansPro,
-                        fontWeight: FontWeight.normal,
+      closeIcon: Icon(Icons.arrow_back_ios, color: Colors.black),
+      shadowColor: Colors.black54,
+      backgroundGradient: LinearGradient(
+        colors: [Colors.lightBlueAccent, Color(0xFF1f186f)],
+      ),
+      menuPageContent: _buildMenuPageContent(context),
+      homePageContent: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
+          leading: null,
+          title: Text(
+            '️Chat',
+            style: TextStyle(
+                fontFamily: kFontBungeeShade,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
+          ),
+          backgroundColor: Colors.lightBlueAccent,
+        ),
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              MessagesStream(),
+              Container(
+                decoration: kMessageContainerDecoration,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        textInputAction: TextInputAction.search,
+                        controller: messageTextController,
+                        decoration: kMessageTextFieldDecoration,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: kFontSourceSansPro,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        onChanged: (value) {
+                          _messageText = value;
+                        },
+                        onEditingComplete: () {
+                          sendMessage();
+                        },
                       ),
-                      onChanged: (value) {
-                        _messageText = value;
-                      },
-                      onEditingComplete: () {
+                    ),
+                    TextButton(
+                      onPressed: () {
                         sendMessage();
                       },
+                      child: Text(
+                        'Send',
+                        style: kSendButtonTextStyle,
+                      ),
                     ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuPageContent(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 100.0, left: 15),
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              height: 100.0,
+              width: 100.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(30.0),
+                  bottomLeft: Radius.circular(30.0),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 50.0,
+                    child: Image.asset('images/logo.png'),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      sendMessage();
-                    },
-                    child: Text(
-                      'Send',
-                      style: kSendButtonTextStyle,
-                    ),
+                  Text(
+                    "CHAT",
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.black,
+                        fontFamily: kFontBungeeShade,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
+            Padding(padding: EdgeInsets.only(bottom: 40)),
+            CustomizedTextButton(
+              title: 'VIP Group Chat',
+              onPressed: () {},
+            ),
+            CustomizedTextButton(
+              title: 'Private Chat',
+              onPressed: () {},
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 20)),
+            Divider(
+              color: Colors.black87,
+              thickness: 2,
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 20)),
+            Row(
+              children: [
+                CustomizedTextButton(
+                  title: 'Logout',
+                  onPressed: () {
+                    _auth.signOut();
+                    Navigator.pushReplacementNamed(context, WelcomeScreen.id);
+                  },
+                ),
+                SizedBox(width: 6),
+                FaIcon(
+                  FontAwesomeIcons.signOutAlt,
+                  color: Colors.black87,
+                  size: 14.0,
+                ),
+              ],
+            ),
+            CustomizedTextButton(
+              title: 'About ',
+              onPressed: () {},
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 20)),
           ],
         ),
       ),
-      // bottomNavigationBar: SnakeNavigationBar.color(
-      //   behaviour: SnakeBarBehaviour.pinned,
-      //   snakeShape: SnakeShape.circle,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: const BorderRadius.only(
-      //       topLeft: Radius.circular(25),
-      //       topRight: Radius.circular(25),
-      //     ),
-      //   ),
-      //   padding: EdgeInsets.zero,
-      //
-      //   ///configuration for SnakeNavigationBar.color
-      //   snakeViewColor: Colors.lightBlueAccent,
-      //   selectedItemColor: SnakeShape.circle == SnakeShape.indicator
-      //       ? Colors.lightBlueAccent
-      //       : null,
-      //   unselectedItemColor: Colors.black26,
-      //
-      //   showUnselectedLabels: false,
-      //   showSelectedLabels: false,
-      //
-      //   currentIndex: _selectedBottomBarItemPosition,
-      //   onTap: (index) =>
-      //       setState(() => _selectedBottomBarItemPosition = index),
-      //   items: [
-      //     const BottomNavigationBarItem(
-      //         icon: Icon(Icons.group), label: 'tickets'),
-      //     const BottomNavigationBarItem(
-      //         icon: Icon(Icons.animation), label: 'tickets'),
-      //     const BottomNavigationBarItem(
-      //         icon: Icon(Icons.list), label: 'tickets'),
-      //   ],
-      //   selectedLabelStyle: const TextStyle(fontSize: 14),
-      //   unselectedLabelStyle: const TextStyle(fontSize: 10),
-      // ),
     );
   }
 }

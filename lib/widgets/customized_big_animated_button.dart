@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vip_chat_app/constants.dart';
+import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/widgets/animated_button.dart';
 
 class CustomizedBigAnimatedButton extends StatelessWidget {

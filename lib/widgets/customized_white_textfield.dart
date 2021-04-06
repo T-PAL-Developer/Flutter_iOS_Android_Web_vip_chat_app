@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vip_chat_app/constants.dart';
+import 'package:vip_chat_app/utilities/constants.dart';
 
 class CustomizedWhiteTextField extends StatelessWidget {
   CustomizedWhiteTextField({
