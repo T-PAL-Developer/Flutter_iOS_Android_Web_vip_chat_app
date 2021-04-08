@@ -64,7 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
       shadowAngle: -0.275,
       shadowSpeed: 350,
       openIcon: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(9.0),
         child: Icon(Icons.menu_open, color: Colors.black),
       ),
       closeIcon: Icon(Icons.arrow_back_ios, color: Colors.black),

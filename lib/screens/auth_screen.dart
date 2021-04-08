@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
 import 'package:vip_chat_app/widgets/customized_icon_animated_button.dart';
@@ -14,8 +16,10 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 class AuthScreen extends StatefulWidget {
   static const String id = 'auth_screen';
 
-  const AuthScreen({Key key, this.isLogin}) : super(key: key);
+  const AuthScreen({Key key, this.isLogin, @required this.auth})
+      : super(key: key);
   final bool isLogin;
+  final AuthBase auth;
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -26,9 +30,20 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _showSpinner = false;
   bool _isLoginMode;
+  Auth _authentication;
   String _username;
   String _email;
   String _password;
+
+  Future<void> _signInAnonymously() async {
+    final user = await _authentication.signInAnonymously();
+    print('Anonymous sign in success! uid: ${user?.uid}');
+  }
+
+  Future<void> _signInWithFacebook() async {
+    final user = await _authentication.signInWithFacebook();
+    print('Facebook sign in success! uid: ${user?.uid}');
+  }
 
   Future<void> _trySubmit() async {
     final isValid = _formKey.currentState.validate();
@@ -102,6 +117,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     _isLoginMode = widget.isLogin;
+    _authentication = widget.auth;
   }
 
   @override
@@ -138,10 +154,13 @@ class _AuthScreenState extends State<AuthScreen> {
                     Colors.purpleAccent,
                   ],
                 ),
-                Text('or SIGN IN with'),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('or sign in with'),
+                ),
                 CustomizedIconAnimatedButton(
                   title: 'Facebook',
-                  onTap: () {},
+                  onTap: _signInWithFacebook,
                   gradientColors: [
                     Colors.indigoAccent.shade400,
                     Colors.lightBlue,

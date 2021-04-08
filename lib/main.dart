@@ -6,6 +6,8 @@ import 'screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
+import 'services/auth.dart';
+
 void main() async {
   // Ensure that Firebase is initialized
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,8 +37,8 @@ class MyApp extends StatelessWidget {
         initialRoute:
             _auth.currentUser != null ? ChatScreen.id : WelcomeScreen.id,
         routes: {
-          WelcomeScreen.id: (context) => WelcomeScreen(),
-          AuthScreen.id: (context) => AuthScreen(),
+          WelcomeScreen.id: (context) => WelcomeScreen(auth: Auth()),
+          // AuthScreen.id: (context) => AuthScreen(),
           ChatScreen.id: (context) => ChatScreen(),
         },
       ),

@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
 import 'package:vip_chat_app/widgets/customized_big_animated_button.dart';
@@ -13,6 +14,8 @@ import 'auth_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
+  const WelcomeScreen({Key key, this.auth}) : super(key: key);
+  final AuthBase auth;
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -132,6 +135,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return AuthScreen(
+                          auth: widget.auth,
                           isLogin: true,
                         );
                       }));
@@ -147,6 +151,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return AuthScreen(
+                          auth: widget.auth,
                           isLogin: false,
                         );
                       }));
