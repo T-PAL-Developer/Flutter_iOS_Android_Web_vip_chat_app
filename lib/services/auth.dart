@@ -1,11 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 
 abstract class AuthBase {
   User get currentUser;
   Future<User> signInAnonymously();
-  Future<User> signInWithEmailAndPassword(String email, String password);
-  Future<User> createUserWithEmailAndPassword(String email, String password);
+  Future<User> signInWithEmailAndPassword({String email, String password});
+  Future<User> createUserWithEmailAndPassword({String email, String password});
   Future<User> signInWithFacebook();
   Future<void> signOut();
 }
@@ -13,9 +14,6 @@ abstract class AuthBase {
 class Auth implements AuthBase {
   final _firebaseAuth = FirebaseAuth.instance;
   final _fb = FacebookLogin();
-
-  // @override
-  // Stream<User> authStateChanges() => _firebaseAuth.authStateChanges();
 
   @override
   User get currentUser => _firebaseAuth.currentUser;
@@ -33,7 +31,8 @@ class Auth implements AuthBase {
   }
 
   @override
-  Future<User> signInWithEmailAndPassword(String email, String password) async {
+  Future<User> signInWithEmailAndPassword(
+      {String email, String password}) async {
     final userCredential = await _firebaseAuth.signInWithCredential(
       EmailAuthProvider.credential(email: email, password: password),
     );
@@ -42,7 +41,7 @@ class Auth implements AuthBase {
 
   @override
   Future<User> createUserWithEmailAndPassword(
-      String email, String password) async {
+      {String email, String password}) async {
     final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -62,8 +61,6 @@ class Auth implements AuthBase {
 // Check result status
       switch (res.status) {
         case FacebookLoginStatus.success:
-          // Logged in
-
           // Send access token to server for validation and auth
           final FacebookAccessToken accessToken = res.accessToken;
           // print('Access token: ${accessToken.token}');

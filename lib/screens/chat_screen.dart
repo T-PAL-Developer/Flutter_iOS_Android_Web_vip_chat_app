@@ -1,6 +1,7 @@
 import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vip_chat_app/screens/welcome_screen.dart';
@@ -12,6 +13,8 @@ User _loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
+  const ChatScreen({Key key, @required this.auth}) : super(key: key);
+  final AuthBase auth;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();

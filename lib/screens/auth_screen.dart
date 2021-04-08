@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
@@ -26,23 +25,29 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   bool _showSpinner = false;
-  bool _isLoginMode;
-  Auth _authentication;
+  bool _isLoginMode = false;
   String _username;
   String _email;
   String _password;
 
   Future<void> _signInAnonymously() async {
-    final user = await _authentication.signInAnonymously();
-    print('Anonymous sign in success! uid: ${user?.uid}');
+    final authResult = await widget.auth.signInAnonymously();
+    print('Anonymous sign in success! uid: ${authResult?.uid}');
+    if (authResult != null) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, ChatScreen.id, (route) => false);
+    }
   }
 
   Future<void> _signInWithFacebook() async {
-    final user = await _authentication.signInWithFacebook();
-    print('Facebook sign in success! uid: ${user?.uid}');
+    final authResult = await widget.auth.signInWithFacebook();
+    print('Facebook sign in success! uid: ${authResult?.uid}');
+    if (authResult != null) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, ChatScreen.id, (route) => false);
+    }
   }
 
   Future<void> _trySubmit() async {
@@ -62,11 +67,9 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _submitAuthForm() async {
-    UserCredential authResult;
-
     try {
       if (_isLoginMode) {
-        authResult = await _auth.signInWithEmailAndPassword(
+        final authResult = await widget.auth.signInWithEmailAndPassword(
           email: _email.trim(),
           password: _password.trim(),
         );
@@ -75,13 +78,13 @@ class _AuthScreenState extends State<AuthScreen> {
               context, ChatScreen.id, (route) => false);
         }
       } else {
-        final authResult = await _auth.createUserWithEmailAndPassword(
+        final authResult = await widget.auth.createUserWithEmailAndPassword(
           email: _email.trim(),
           password: _password.trim(),
         );
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(authResult.user.uid)
+            .doc(authResult.uid)
             .set({
           'username': _username,
           'email': _email,
@@ -117,7 +120,6 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     _isLoginMode = widget.isLogin;
-    _authentication = widget.auth;
   }
 
   @override
