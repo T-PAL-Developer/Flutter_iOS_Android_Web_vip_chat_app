@@ -43,14 +43,17 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void sendMessage() {
+  Future<void> sendMessage() async {
+    final userData =
+        await _firestore.collection('users').doc(_loggedInUser.uid).get();
     _now = DateTime.now();
     _date = DateTime(_now.year, _now.month, _now.day, _now.hour, _now.minute);
     _firestore.collection('messages').add({
       'text': _messageText,
-      'sender': _loggedInUser.email,
+      'sender': _loggedInUser.displayName ?? userData['username'],
       // 'time': FieldValue.serverTimestamp(),
       'time': _date.toString().substring(0, 16),
+      'uid': _loggedInUser.uid,
     });
     messageTextController.clear();
   }
@@ -299,12 +302,13 @@ class MessagesStream extends StatelessWidget {
           for (var message in messages) {
             final messageText = message.data()['text'];
             final messageSender = message.data()['sender'];
-            final currentUser = _loggedInUser.email;
+            final userMessage = message.data()['uid'];
+            final currentUser = _loggedInUser.uid;
 
             final messageWidget = MessageContainer(
               text: messageText,
               sender: messageSender,
-              currentUser: currentUser == messageSender,
+              currentUser: currentUser == userMessage,
             );
             messagesWidgets.add(messageWidget);
           }
