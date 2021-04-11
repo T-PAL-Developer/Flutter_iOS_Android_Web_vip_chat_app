@@ -22,6 +22,7 @@
 </head>
 <body>
 
+
 <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
@@ -50,6 +51,22 @@
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
 </script>
+
+<!--Facebook SDK config -->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId            : '3864672046955737',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v7.0'
+    });
+  };
+</script>
+<!-- Facebook JS CDN SDK -->
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+<!-- for interop with dart through this plugin -->
+<script src="https://flutterfacebooklogin.s3.us-east-2.amazonaws.com/web_interop.js"></script>
 
   <script src="main.dart.js" type="application/javascript"></script>
 </body>

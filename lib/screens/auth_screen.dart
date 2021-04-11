@@ -32,24 +32,6 @@ class _AuthScreenState extends State<AuthScreen> {
   String _email;
   String _password;
 
-  Future<void> _signInAnonymously() async {
-    final authResult = await widget.auth.signInAnonymously();
-    print('Anonymous sign in success! uid: ${authResult?.uid}');
-    if (authResult != null) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, ChatScreen.id, (route) => false);
-    }
-  }
-
-  Future<void> _signInWithFacebook() async {
-    final authResult = await widget.auth.signInWithFacebook();
-    print('Facebook sign in success! uid: ${authResult?.uid}');
-    if (authResult != null) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, ChatScreen.id, (route) => false);
-    }
-  }
-
   Future<void> _trySubmit() async {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
@@ -95,25 +77,53 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       }
     } on FirebaseAuthException catch (e) {
-      var errorMessage = 'An error occurred. Please check your credentials.';
-      if (e.message != null) {
-        errorMessage = e.message;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            errorMessage,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Theme.of(context).errorColor,
-          duration: Duration(seconds: 5),
-        ),
-      );
-    } catch (e) {
-      print(e);
+      firebaseAuthException(e);
     }
+  }
+
+  Future<void> _signInAnonymously() async {
+    try {
+      final authResult = await widget.auth.signInAnonymously();
+      print('Anonymous sign in success! uid: ${authResult?.uid}');
+      if (authResult != null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, ChatScreen.id, (route) => false);
+      }
+    } on FirebaseAuthException catch (e) {
+      firebaseAuthException(e);
+    }
+  }
+
+  Future<void> _signInWithFacebook() async {
+    try {
+      final authResult = await widget.auth.signInWithFacebook();
+      print('Facebook sign in success! uid: ${authResult?.uid}');
+      if (authResult != null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, ChatScreen.id, (route) => false);
+      }
+    } on FirebaseAuthException catch (e) {
+      firebaseAuthException(e);
+    }
+  }
+
+  void firebaseAuthException(FirebaseAuthException e) {
+    var errorMessage = 'An error occurred. Please check your credentials.';
+    if (e.message != null) {
+      errorMessage = e.message;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Theme.of(context).errorColor,
+        duration: Duration(seconds: 5),
+      ),
+    );
   }
 
   @override

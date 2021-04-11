@@ -176,7 +176,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       });
                       try {
                         final testUser = await _auth.signInWithEmailAndPassword(
-                            email: 'test@gmail.com', password: '123456');
+                            email: 'test@gmail.com', password: '1234567');
                         if (testUser != null) {
                           Navigator.pushNamed(context, ChatScreen.id);
                         }
