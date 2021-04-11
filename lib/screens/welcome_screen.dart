@@ -1,10 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
+import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/customized_big_animated_button.dart';
 import 'package:vip_chat_app/widgets/customized_text_button.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -23,11 +24,29 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
-  final _auth = FirebaseAuth.instance;
   bool _showSpinner = false;
   AnimationController _controller;
   Animation _animation;
   Animation _curvedAnimation;
+
+  Future<void> _signInAnonymously() async {
+    try {
+      final authResult = await widget.auth.signInAnonymously();
+      print('Anonymous sign in success! uid: ${authResult?.uid}');
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(authResult.uid)
+          .set({
+        'username': 'Anonymous user',
+      });
+      if (authResult != null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, ChatScreen.id, (route) => false);
+      }
+    } on FirebaseAuthException catch (e) {
+      helperFirebaseAuthException(e, context);
+    }
+  }
 
   @override
   void initState() {
@@ -174,18 +193,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       setState(() {
                         _showSpinner = true;
                       });
-                      try {
-                        final testUser = await _auth.signInWithEmailAndPassword(
-                            email: 'test@gmail.com', password: '1234567');
-                        if (testUser != null) {
-                          Navigator.pushNamed(context, ChatScreen.id);
-                        }
-                        setState(() {
-                          _showSpinner = false;
-                        });
-                      } catch (e) {
-                        print(e);
-                      }
+                      await _signInAnonymously();
+                      setState(() {
+                        _showSpinner = false;
+                      });
                     },
                   ),
                 ],

@@ -1,3 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+void helperFirebaseAuthException(
+    FirebaseAuthException e, BuildContext context) {
+  var errorMessage = 'An error occurred. Please check your credentials.';
+  if (e.message != null) {
+    errorMessage = e.message;
+  }
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        errorMessage,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Theme.of(context).errorColor,
+      duration: Duration(seconds: 5),
+    ),
+  );
+}
+
 String categorizeErrorCode(String errorCode) {
   String errorMessage;
   switch (errorCode) {

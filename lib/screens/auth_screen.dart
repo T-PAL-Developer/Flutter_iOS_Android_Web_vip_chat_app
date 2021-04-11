@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
+import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/customized_icon_animated_button.dart';
 import 'package:vip_chat_app/widgets/customized_medium_animated_button.dart';
 import 'package:vip_chat_app/widgets/customized_text_button.dart';
@@ -77,20 +78,7 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       }
     } on FirebaseAuthException catch (e) {
-      firebaseAuthException(e);
-    }
-  }
-
-  Future<void> _signInAnonymously() async {
-    try {
-      final authResult = await widget.auth.signInAnonymously();
-      print('Anonymous sign in success! uid: ${authResult?.uid}');
-      if (authResult != null) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, ChatScreen.id, (route) => false);
-      }
-    } on FirebaseAuthException catch (e) {
-      firebaseAuthException(e);
+      helperFirebaseAuthException(e, context);
     }
   }
 
@@ -103,27 +91,8 @@ class _AuthScreenState extends State<AuthScreen> {
             context, ChatScreen.id, (route) => false);
       }
     } on FirebaseAuthException catch (e) {
-      firebaseAuthException(e);
+      helperFirebaseAuthException(e, context);
     }
-  }
-
-  void firebaseAuthException(FirebaseAuthException e) {
-    var errorMessage = 'An error occurred. Please check your credentials.';
-    if (e.message != null) {
-      errorMessage = e.message;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          errorMessage,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: Theme.of(context).errorColor,
-        duration: Duration(seconds: 5),
-      ),
-    );
   }
 
   @override
@@ -172,7 +141,15 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 CustomizedIconAnimatedButton(
                   title: 'Facebook',
-                  onTap: _signInWithFacebook,
+                  onTap: () async {
+                    setState(() {
+                      _showSpinner = true;
+                    });
+                    await _signInWithFacebook();
+                    setState(() {
+                      _showSpinner = false;
+                    });
+                  },
                   gradientColors: [
                     Colors.indigoAccent.shade400,
                     Colors.lightBlue,
