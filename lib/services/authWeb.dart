@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login_web/flutter_facebook_login_web.dart';
 
 class AuthWeb {
-  final _fb = FacebookLoginWeb();
+  final _fbWebAuth = FacebookLoginWeb();
 
   Future<User> signInWithFacebook(FirebaseAuth firebaseAuth) async {
     try {
 // Log in
-      final result = await _fb.logIn(['email', 'publicProfile']);
+      final result = await _fbWebAuth.logIn(['email', 'publicProfile']);
 
 // Check result status
       switch (result.status) {
@@ -34,6 +34,15 @@ class AuthWeb {
         default:
           throw UnimplementedError();
       }
+    } catch (e) {
+      print('Error -> Exception details:\n $e');
+      rethrow;
+    }
+  }
+
+  Future<void> logOut() async {
+    try {
+      await _fbWebAuth.logOut();
     } catch (e) {
       print('Error -> Exception details:\n $e');
       rethrow;

@@ -14,8 +14,8 @@ abstract class AuthBase {
 
 class Auth implements AuthBase {
   final _firebaseAuth = FirebaseAuth.instance;
-  final _fb = FacebookLogin();
-  final _fbWeb = AuthWeb();
+  final _fbAuth = FacebookLogin();
+  final _fbWebAuth = AuthWeb();
 
   @override
   User get currentUser => _firebaseAuth.currentUser;
@@ -64,11 +64,11 @@ class Auth implements AuthBase {
   @override
   Future<User> signInWithFacebook() async {
     if (kIsWeb) {
-      return _fbWeb.signInWithFacebook(_firebaseAuth);
+      return _fbWebAuth.signInWithFacebook(_firebaseAuth);
     } else {
       try {
 // Log in
-        final result = await _fb.logIn(permissions: [
+        final result = await _fbAuth.logIn(permissions: [
           FacebookPermission.publicProfile,
           FacebookPermission.email,
         ]);
@@ -123,7 +123,11 @@ class Auth implements AuthBase {
   @override
   Future<void> signOut() async {
     try {
-      await _fb.logOut();
+      if (kIsWeb) {
+        await _fbWebAuth.logOut();
+      } else {
+        await _fbAuth.logOut();
+      }
       await _firebaseAuth.signOut();
     } catch (e) {
       print('Error -> Exception details:\n $e');
