@@ -24,18 +24,19 @@ class _ChatScreenState extends State<ChatScreen> {
   User _loggedInUser;
   DateTime _now;
   DateTime _date;
-  String _messageText;
+  String _messageText = '';
 
   void initState() {
     super.initState();
     _loggedInUser = widget.auth.currentUser;
   }
 
-  Future<void> sendMessage() async {
+  Future<void> _sendMessage() async {
     final userData = await FirebaseFirestore.instance
         .collection(CollectionUsers.id)
         .doc(_loggedInUser.uid)
         .get();
+
     _now = DateTime.now();
     _date = DateTime(_now.year, _now.month, _now.day, _now.hour, _now.minute);
     FirebaseFirestore.instance.collection(CollectionGroupChat.id).add({
@@ -110,17 +111,17 @@ class _ChatScreenState extends State<ChatScreen> {
                           fontWeight: FontWeight.normal,
                         ),
                         onChanged: (value) {
-                          _messageText = value;
+                          setState(() {
+                            _messageText = value;
+                          });
                         },
-                        onEditingComplete: () {
-                          sendMessage();
-                        },
+                        onEditingComplete:
+                            _messageText.trim().isEmpty ? null : _sendMessage,
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        sendMessage();
-                      },
+                      onPressed:
+                          _messageText.trim().isEmpty ? null : _sendMessage,
                       child: Text(
                         'Send',
                         style: kSendButtonTextStyle,
@@ -296,26 +297,20 @@ class MessagesStream extends StatelessWidget {
           );
         }
         if (snapshot.hasData) {
-          final messages = snapshot.data.docs.reversed;
-          List<MessageContainer> messagesWidgets = [];
-          for (var message in messages) {
-            final messageText = message.data()[CollectionGroupChat.text];
-            final messageSender = message.data()[CollectionGroupChat.sender];
-            final userMessage = message.data()[CollectionGroupChat.uid];
-            final currentUser = loggedInUser.uid;
+          final chatDocs = snapshot.data.docs;
+          final currentUser = loggedInUser.uid;
 
-            final messageWidget = MessageContainer(
-              text: messageText,
-              sender: messageSender,
-              currentUser: currentUser == userMessage,
-            );
-            messagesWidgets.add(messageWidget);
-          }
           return Expanded(
-            child: ListView(
+            child: ListView.builder(
               reverse: true,
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              children: messagesWidgets,
+              itemCount: chatDocs.length,
+              itemBuilder: (context, index) => MessageContainer(
+                text: chatDocs[index][CollectionGroupChat.text],
+                sender: chatDocs[index][CollectionGroupChat.sender],
+                currentUser:
+                    currentUser == chatDocs[index][CollectionGroupChat.uid],
+              ),
             ),
           );
         } else if (snapshot.hasError) {
