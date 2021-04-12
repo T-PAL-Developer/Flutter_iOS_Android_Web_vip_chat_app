@@ -1,5 +1,5 @@
-import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
@@ -7,9 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vip_chat_app/screens/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vip_chat_app/widgets/customized_text_button.dart';
-
-final _firestore = FirebaseFirestore.instance;
-User _loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
@@ -23,32 +20,24 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
+  User _loggedInUser;
   DateTime _now;
   DateTime _date;
   String _messageText;
 
   void initState() {
     super.initState();
-    getCurrentUser();
-  }
-
-  void getCurrentUser() {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        _loggedInUser = user;
-      }
-    } catch (e) {
-      print(e);
-    }
+    _loggedInUser = widget.auth.currentUser;
   }
 
   Future<void> sendMessage() async {
-    final userData =
-        await _firestore.collection('users').doc(_loggedInUser.uid).get();
+    final userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_loggedInUser.uid)
+        .get();
     _now = DateTime.now();
     _date = DateTime(_now.year, _now.month, _now.day, _now.hour, _now.minute);
-    _firestore.collection('messages').add({
+    FirebaseFirestore.instance.collection('messages').add({
       'text': _messageText,
       'sender': _loggedInUser.displayName ?? userData['username'],
       // 'time': FieldValue.serverTimestamp(),
@@ -101,7 +90,9 @@ class _ChatScreenState extends State<ChatScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              MessagesStream(),
+              MessagesStream(
+                loggedInUser: _loggedInUser,
+              ),
               Container(
                 decoration: kMessageContainerDecoration,
                 child: Row(
@@ -224,7 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class MessageContainer extends StatelessWidget {
-  MessageContainer({this.text, this.sender, this.currentUser});
+  MessageContainer({this.text, this.sender, @required this.currentUser});
 
   final String text;
   final String sender;
@@ -281,10 +272,17 @@ class MessageContainer extends StatelessWidget {
 }
 
 class MessagesStream extends StatelessWidget {
+  const MessagesStream({Key key, @required this.loggedInUser})
+      : super(key: key);
+  final User loggedInUser;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').orderBy('time').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('groupchat')
+          .orderBy('time')
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -303,7 +301,7 @@ class MessagesStream extends StatelessWidget {
             final messageText = message.data()['text'];
             final messageSender = message.data()['sender'];
             final userMessage = message.data()['uid'];
-            final currentUser = _loggedInUser.uid;
+            final currentUser = loggedInUser.uid;
 
             final messageWidget = MessageContainer(
               text: messageText,
