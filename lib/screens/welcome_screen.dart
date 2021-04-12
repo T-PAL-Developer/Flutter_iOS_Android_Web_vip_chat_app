@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
+import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/customized_big_animated_button.dart';
 import 'package:vip_chat_app/widgets/customized_text_button.dart';
@@ -34,10 +35,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       final authResult = await widget.auth.signInAnonymously();
       print('Anonymous sign in success! uid: ${authResult?.uid}');
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection(CollectionUsers.id)
           .doc(authResult.uid)
           .set({
-        'username': 'Anonymous user',
+        CollectionUsers.username: 'Anonymous user',
       });
       if (authResult != null) {
         Navigator.pushNamedAndRemoveUntil(

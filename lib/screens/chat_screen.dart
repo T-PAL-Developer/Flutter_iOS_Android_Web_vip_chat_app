@@ -6,6 +6,7 @@ import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vip_chat_app/screens/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/widgets/customized_text_button.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -32,17 +33,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> sendMessage() async {
     final userData = await FirebaseFirestore.instance
-        .collection('users')
+        .collection(CollectionUsers.id)
         .doc(_loggedInUser.uid)
         .get();
     _now = DateTime.now();
     _date = DateTime(_now.year, _now.month, _now.day, _now.hour, _now.minute);
-    FirebaseFirestore.instance.collection('messages').add({
-      'text': _messageText,
-      'sender': _loggedInUser.displayName ?? userData['username'],
-      // 'time': FieldValue.serverTimestamp(),
-      'time': _date.toString().substring(0, 16),
-      'uid': _loggedInUser.uid,
+    FirebaseFirestore.instance.collection(CollectionGroupChat.id).add({
+      CollectionGroupChat.text: _messageText,
+      CollectionGroupChat.sender:
+          _loggedInUser.displayName ?? userData[CollectionUsers.username],
+      CollectionGroupChat.time: _date.toString().substring(0, 16),
+      CollectionGroupChat.uid: _loggedInUser.uid,
     });
     messageTextController.clear();
   }
@@ -280,8 +281,8 @@ class MessagesStream extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('groupchat')
-          .orderBy('time')
+          .collection(CollectionGroupChat.id)
+          .orderBy(CollectionGroupChat.time)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -298,9 +299,9 @@ class MessagesStream extends StatelessWidget {
           final messages = snapshot.data.docs.reversed;
           List<MessageContainer> messagesWidgets = [];
           for (var message in messages) {
-            final messageText = message.data()['text'];
-            final messageSender = message.data()['sender'];
-            final userMessage = message.data()['uid'];
+            final messageText = message.data()[CollectionGroupChat.text];
+            final messageSender = message.data()[CollectionGroupChat.sender];
+            final userMessage = message.data()[CollectionGroupChat.uid];
             final currentUser = loggedInUser.uid;
 
             final messageWidget = MessageContainer(

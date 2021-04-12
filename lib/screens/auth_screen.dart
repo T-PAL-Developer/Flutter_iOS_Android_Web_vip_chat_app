@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
+import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/customized_icon_animated_button.dart';
 import 'package:vip_chat_app/widgets/customized_medium_animated_button.dart';
@@ -66,11 +67,11 @@ class _AuthScreenState extends State<AuthScreen> {
           password: _password.trim(),
         );
         await FirebaseFirestore.instance
-            .collection('users')
+            .collection(CollectionUsers.id)
             .doc(authResult.uid)
             .set({
-          'username': _username,
-          'email': _email,
+          CollectionUsers.username: _username,
+          CollectionUsers.email: _email,
         });
         if (authResult != null) {
           Navigator.pushNamedAndRemoveUntil(
