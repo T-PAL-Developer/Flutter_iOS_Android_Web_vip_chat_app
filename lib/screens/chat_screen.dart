@@ -22,9 +22,9 @@ class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   User _loggedInUser;
-  DateTime _now;
-  DateTime _date;
   String _messageText = '';
+  // DateTime _now;
+  // DateTime _date;
 
   void initState() {
     super.initState();
@@ -36,14 +36,14 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection(CollectionUsers.id)
         .doc(_loggedInUser.uid)
         .get();
-
-    _now = DateTime.now();
-    _date = DateTime(_now.year, _now.month, _now.day, _now.hour, _now.minute);
+    // _now = DateTime.now();
+    // _date = DateTime(_now.year, _now.month, _now.day, _now.hour, _now.minute);
     FirebaseFirestore.instance.collection(CollectionGroupChat.id).add({
       CollectionGroupChat.text: _messageText,
       CollectionGroupChat.sender:
           _loggedInUser.displayName ?? userData[CollectionUsers.username],
-      CollectionGroupChat.time: _date.toString().substring(0, 16),
+      CollectionGroupChat.createdAt: Timestamp.now(),
+      // _date.toString().substring(0, 16),
       CollectionGroupChat.uid: _loggedInUser.uid,
     });
     messageTextController.clear();
@@ -283,7 +283,10 @@ class MessagesStream extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection(CollectionGroupChat.id)
-          .orderBy(CollectionGroupChat.time)
+          .orderBy(
+            CollectionGroupChat.createdAt,
+            descending: true,
+          )
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
