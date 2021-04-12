@@ -1,18 +1,26 @@
-https://vip-chatt.web.app/
+<strong>App is available online, click here -> [Live](https://vip-chatt.web.app)</strong>  <br>
 
-# vip_chat_app
+# Chat APP
 
-A new Flutter application.
+A Flutter application created on the iOS, Android, desktop and web(https://vip-chatt.web.app)
 
-## Getting Started
+## Description
 
-This project is a starting point for a Flutter application.
+Messaging app using Firebase backend platform. Application use authentication package to equip app with a cloud based NoSQL database and secure authentication methods. <br>
+You can find here:
 
-A few resources to get you started if this is your first Flutter project:
+- How to incorporate Firebase into Flutter projects.
+- Firebase authentication to register and sign in users.
+- Facebook authentication to sign in mobile and web.
+- Animations using the Flutter Hero widget.
+- Aniamtions using Flutter's animation controller.
+- Firebase Firestore to store and retrieve data on the fly.
+- Firebase Storage to upload files.
+- Dependency Injections.
+- Push notifications.
+- Streams.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
+### Flutter documentation
+For help getting started with Flutter, view
+[online documentation](https://flutter.dev/docs), tutorials,
 samples, guidance on mobile development, and a full API reference.
