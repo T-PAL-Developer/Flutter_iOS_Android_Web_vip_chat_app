@@ -7,12 +7,13 @@ import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
 import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
-import 'package:vip_chat_app/widgets/customized_icon_animated_button.dart';
-import 'package:vip_chat_app/widgets/customized_medium_animated_button.dart';
+import 'package:vip_chat_app/widgets/customized_gradient_icon_button.dart';
+import 'package:vip_chat_app/widgets/customized_gradient_button.dart';
 import 'package:vip_chat_app/widgets/customized_text_button.dart';
-import 'package:vip_chat_app/widgets/customized_white_textfield.dart';
+import 'package:vip_chat_app/widgets/customized_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:vip_chat_app/widgets/user_image_picker.dart';
 
 class AuthScreen extends StatefulWidget {
   static const String id = 'auth_screen';
@@ -117,18 +118,12 @@ class _AuthScreenState extends State<AuthScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Hero(
-                  tag: 'logo',
-                  child: Container(
-                    height: 70.0,
-                    child: Image.asset('images/logo.png'),
-                  ),
-                ),
+                (_isLoginMode) ? _buildLogoImage() : UserImagePicker(),
                 SizedBox(height: 20.0),
                 _buildForm(),
                 if (_isLoginMode) _buildForgotPasswordBtn(),
                 SizedBox(height: 19.0),
-                CustomizedMediumAnimatedButton(
+                CustomizedGradientButton(
                   title: (_isLoginMode ? 'Log in' : 'Register'),
                   onTap: _trySubmit,
                   gradientColors: [
@@ -140,7 +135,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text('or sign in with'),
                 ),
-                CustomizedIconAnimatedButton(
+                CustomizedGradientIconButton(
                   title: 'Facebook',
                   onTap: () async {
                     setState(() {
@@ -170,13 +165,23 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
+  Widget _buildLogoImage() {
+    return Hero(
+      tag: 'logo',
+      child: Container(
+        height: 70.0,
+        child: Image.asset('images/logo.png'),
+      ),
+    );
+  }
+
   Widget _buildForm() {
     return Form(
       key: _formKey,
       child: Column(
         children: [
           if (!_isLoginMode)
-            CustomizedWhiteTextField(
+            CustomizedTextFormField(
               key: ValueKey('name'),
               icon: Icon(
                 Icons.person,
@@ -190,7 +195,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 _username = value;
               },
             ),
-          CustomizedWhiteTextField(
+          CustomizedTextFormField(
             key: ValueKey('email'),
             keyboardType: TextInputType.emailAddress,
             icon: Icon(
@@ -209,7 +214,7 @@ class _AuthScreenState extends State<AuthScreen> {
               _email = value;
             },
           ),
-          CustomizedWhiteTextField(
+          CustomizedTextFormField(
             key: ValueKey('password'),
             icon: Icon(
               Icons.lock,

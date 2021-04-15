@@ -7,11 +7,10 @@ import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
 import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
-import 'package:vip_chat_app/widgets/customized_big_animated_button.dart';
+import 'package:vip_chat_app/widgets/customized_gradient_button.dart';
 import 'package:vip_chat_app/widgets/customized_text_button.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 import 'auth_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -149,8 +148,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                   getLogo(),
                   SizedBox(height: 40.0),
-                  CustomizedBigAnimatedButton(
+                  CustomizedGradientButton(
                     title: 'Log In',
+                    height: 70,
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -165,8 +165,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       Colors.purpleAccent,
                     ],
                   ),
-                  CustomizedBigAnimatedButton(
+                  CustomizedGradientButton(
                     title: 'Register',
+                    height: 70,
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {

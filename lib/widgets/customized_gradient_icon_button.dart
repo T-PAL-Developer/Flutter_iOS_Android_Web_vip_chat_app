@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
-import 'package:vip_chat_app/widgets/animated_icon_button.dart';
+import 'package:vip_chat_app/widgets/gradient_icon_button.dart';
 
-class CustomizedIconAnimatedButton extends StatelessWidget {
-  CustomizedIconAnimatedButton({
+class CustomizedGradientIconButton extends StatelessWidget {
+  CustomizedGradientIconButton({
     @required this.title,
     @required this.onTap,
     @required this.gradientColors,
     @required this.icon,
     this.titleColor,
+    this.width,
+    this.height,
   });
 
   final String title;
@@ -16,15 +18,17 @@ class CustomizedIconAnimatedButton extends StatelessWidget {
   final List<Color> gradientColors;
   final Color titleColor;
   final Widget icon;
+  final double width;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: AnimatedIconButton(
+      child: GadientIconButton(
         icon: icon,
-        width: 200.0,
-        height: 50.0,
+        width: (width != null) ? width : 200.0,
+        height: (height != null) ? height : 50.0,
         duration: Duration(milliseconds: 60),
         borderRadius: BorderRadius.circular(100.0),
         color: Colors.red,

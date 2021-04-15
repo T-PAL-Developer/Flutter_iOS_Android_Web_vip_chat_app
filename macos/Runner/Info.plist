@@ -33,5 +33,9 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to let you pick an image</string>
+    <key>NSCameraUsageDescription</key>
+    <string>We need access to let you pick an image</string>
 </dict>
 </plist>

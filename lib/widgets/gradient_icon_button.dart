@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class AnimatedButton extends StatefulWidget {
+class GadientIconButton extends StatefulWidget {
   final Function onTap;
   final String title;
   final Duration duration;
   //final Curve curve;
+  final double size;
   final BorderRadius borderRadius;
   final List<Shadow> boxShadow;
   final Color color;
@@ -17,14 +18,17 @@ class AnimatedButton extends StatefulWidget {
   final double titleSize;
   final FontWeight fontWeight;
   final String fontFamily;
+  final Widget icon;
   final double height;
   final double width;
 
-  AnimatedButton({
+  GadientIconButton({
     @required this.onTap,
     @required this.title,
+    @required this.icon,
     this.duration,
     //this.curve,
+    this.size,
     this.borderRadius,
     this.boxShadow,
     this.color,
@@ -40,10 +44,10 @@ class AnimatedButton extends StatefulWidget {
     this.width,
   });
   @override
-  _AnimatedButtonState createState() => _AnimatedButtonState();
+  _GadientIconButtonState createState() => _GadientIconButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton>
+class _GadientIconButtonState extends State<GadientIconButton>
     with SingleTickerProviderStateMixin {
   double _scale;
   AnimationController _animationController;
@@ -109,17 +113,27 @@ class _AnimatedButtonState extends State<AnimatedButton>
       width: (widget.width != null) ? widget.width : 200,
       decoration: boxDecoration(),
       child: Center(
-        child: Text(
-          (widget.title != null) ? widget.title : "animated button",
-          style: TextStyle(
-            fontFamily: widget.fontFamily,
-            fontSize: (widget.titleSize != null) ? widget.titleSize : 20,
-            fontWeight: (widget.fontWeight != null)
-                ? widget.fontWeight
-                : FontWeight.w500,
-            color:
-                (widget.titleColor != null) ? widget.titleColor : Colors.black,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            widget.icon,
+            SizedBox(
+              width: 10.0,
+            ),
+            Text(
+              (widget.title != null) ? widget.title : "animated icon button",
+              style: TextStyle(
+                fontFamily: widget.fontFamily,
+                fontSize: (widget.titleSize != null) ? widget.titleSize : 20,
+                fontWeight: (widget.fontWeight != null)
+                    ? widget.fontWeight
+                    : FontWeight.w500,
+                color: (widget.titleColor != null)
+                    ? widget.titleColor
+                    : Colors.black,
+              ),
+            ),
+          ],
         ),
       ),
     );
