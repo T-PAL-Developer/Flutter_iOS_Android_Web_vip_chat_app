@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vip_chat_app/screens/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
-import 'package:vip_chat_app/widgets/customized_text_button.dart';
+import 'package:vip_chat_app/widgets/buttons/customized_text_button.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
@@ -23,8 +23,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final _auth = FirebaseAuth.instance;
   User _loggedInUser;
   String _messageText = '';
-  // DateTime _now;
-  // DateTime _date;
 
   void initState() {
     super.initState();
@@ -36,15 +34,13 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection(CollectionUsers.id)
         .doc(_loggedInUser.uid)
         .get();
-    // _now = DateTime.now();
-    // _date = DateTime(_now.year, _now.month, _now.day, _now.hour, _now.minute);
     FirebaseFirestore.instance.collection(CollectionGroupChat.id).add({
       CollectionGroupChat.text: _messageText,
       CollectionGroupChat.sender:
           _loggedInUser.displayName ?? userData[CollectionUsers.username],
       CollectionGroupChat.createdAt: Timestamp.now(),
-      // _date.toString().substring(0, 16),
       CollectionGroupChat.uid: _loggedInUser.uid,
+      CollectionGroupChat.imageUrl: userData[CollectionUsers.imageUrl]
     });
     messageTextController.clear();
   }
@@ -217,58 +213,77 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class MessageContainer extends StatelessWidget {
-  MessageContainer({this.text, this.sender, @required this.currentUser});
+  MessageContainer({
+    this.text,
+    this.sender,
+    @required this.currentUser,
+    this.userImageURL,
+  });
 
   final String text;
   final String sender;
   final bool currentUser;
+  final String userImageURL;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment:
-            currentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: Text(
-              sender,
-              style: TextStyle(
-                fontSize: 12.0,
-                fontFamily: kFontSourceSansPro,
-                color: Colors.white54,
-              ),
-            ),
-          ),
-          Container(
-            constraints: BoxConstraints(minWidth: 30.0),
-            decoration: BoxDecoration(
-              color: currentUser ? Colors.lightBlueAccent : Colors.white,
-              borderRadius: currentUser
-                  ? BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0))
-                  : BorderRadius.only(
-                      topRight: Radius.circular(30.0),
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0)),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: Text(
-                text ?? 'Text display error',
-                style: TextStyle(
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment:
+                currentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Text(
+                  sender,
+                  style: TextStyle(
+                    fontSize: 12.0,
                     fontFamily: kFontSourceSansPro,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black),
+                    color: Colors.white54,
+                  ),
+                ),
               ),
-            ),
+              Container(
+                constraints: BoxConstraints(minWidth: 30.0),
+                decoration: BoxDecoration(
+                  color: currentUser ? Colors.lightBlueAccent : Colors.white,
+                  borderRadius: currentUser
+                      ? BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          bottomLeft: Radius.circular(30.0),
+                          bottomRight: Radius.circular(30.0))
+                      : BorderRadius.only(
+                          topRight: Radius.circular(30.0),
+                          bottomLeft: Radius.circular(30.0),
+                          bottomRight: Radius.circular(30.0)),
+                ),
+                child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                  child: Text(
+                    text ?? 'Text display error',
+                    style: TextStyle(
+                        fontFamily: kFontSourceSansPro,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        Positioned(
+          top: -30.0,
+          left: 140,
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(userImageURL),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -313,6 +328,7 @@ class MessagesStream extends StatelessWidget {
                 sender: chatDocs[index][CollectionGroupChat.sender],
                 currentUser:
                     currentUser == chatDocs[index][CollectionGroupChat.uid],
+                userImageURL: chatDocs[index][CollectionGroupChat.imageUrl],
               ),
             ),
           );

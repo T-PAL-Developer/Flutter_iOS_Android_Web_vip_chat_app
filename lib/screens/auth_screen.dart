@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,9 +12,9 @@ import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
 import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
-import 'package:vip_chat_app/widgets/customized_gradient_icon_button.dart';
-import 'package:vip_chat_app/widgets/customized_gradient_button.dart';
-import 'package:vip_chat_app/widgets/customized_text_button.dart';
+import 'package:vip_chat_app/widgets/buttons/customized_gradient_icon_button.dart';
+import 'package:vip_chat_app/widgets/buttons/customized_gradient_button.dart';
+import 'package:vip_chat_app/widgets/buttons/customized_text_button.dart';
 import 'package:vip_chat_app/widgets/customized_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -35,9 +39,9 @@ class _AuthScreenState extends State<AuthScreen> {
   String _username;
   String _email;
   String _password;
-  PickedFile _userImageFile;
+  Uint8List _userImageFile;
 
-  void _pickedImage(PickedFile pickedImage) {
+  void _pickedImage(Uint8List pickedImage) {
     _userImageFile = pickedImage;
   }
 
@@ -89,12 +93,23 @@ class _AuthScreenState extends State<AuthScreen> {
           email: _email.trim(),
           password: _password.trim(),
         );
+
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child('${authResult.uid}.jpg');
+
+        await ref.putData(_userImageFile);
+
+        final url = await ref.getDownloadURL();
+
         await FirebaseFirestore.instance
             .collection(CollectionUsers.id)
             .doc(authResult.uid)
             .set({
           CollectionUsers.username: _username,
           CollectionUsers.email: _email,
+          CollectionUsers.imageUrl: url,
         });
         if (authResult != null) {
           Navigator.pushNamedAndRemoveUntil(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
-import 'package:vip_chat_app/widgets/gradient_button.dart';
+import 'package:vip_chat_app/widgets/buttons/gradient_button.dart';
 
 class CustomizedGradientButton extends StatelessWidget {
   CustomizedGradientButton({
