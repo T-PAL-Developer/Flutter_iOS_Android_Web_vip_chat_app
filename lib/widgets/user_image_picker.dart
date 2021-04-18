@@ -6,6 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 
 class UserImagePicker extends StatefulWidget {
+  const UserImagePicker({Key key, @required this.pickedImageFileFunc})
+      : super(key: key);
+
+  final void Function(PickedFile imageFile) pickedImageFileFunc;
+
   @override
   _UserImagePickerState createState() => _UserImagePickerState();
 }
@@ -18,14 +23,10 @@ class _UserImagePickerState extends State<UserImagePicker> {
     try {
       final PickedFile pickedImage =
           await _picker.getImage(source: ImageSource.gallery);
-      // final File pickedImageFile = File(pickedImage.path);
       setState(() {
-        if (pickedImage != null) {
-          _image = pickedImage;
-        } else {
-          print('No image selected.');
-        }
+        _image = pickedImage;
       });
+      widget.pickedImageFileFunc(pickedImage);
     } catch (e) {
       print('Error -> Exception details:\n $e');
       rethrow;
@@ -37,12 +38,12 @@ class _UserImagePickerState extends State<UserImagePicker> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 30.0, bottom: 2.0),
           child: Hero(
             tag: 'logo',
             child: CircleAvatar(
               backgroundColor: Colors.transparent,
-              radius: 40.0,
+              radius: 35.0,
               backgroundImage: _image != null
                   ? ((!kIsWeb)
                       ? FileImage(File(_image.path))

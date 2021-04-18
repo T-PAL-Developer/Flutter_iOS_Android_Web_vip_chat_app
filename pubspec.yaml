@@ -40,6 +40,7 @@ dependencies:
   flutter_login_facebook: ^1.0.1
   flutter_facebook_login_web: ^0.2.1+1
   image_picker: ^0.7.4
+  firebase_storage: ^8.0.3
 
 dev_dependencies:
   flutter_test:

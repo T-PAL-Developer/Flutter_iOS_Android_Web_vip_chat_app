@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
@@ -34,10 +35,31 @@ class _AuthScreenState extends State<AuthScreen> {
   String _username;
   String _email;
   String _password;
+  PickedFile _userImageFile;
+
+  void _pickedImage(PickedFile pickedImage) {
+    _userImageFile = pickedImage;
+  }
 
   Future<void> _trySubmit() async {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
+
+    if (_userImageFile == null && !_isLoginMode) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Please pick an avatar image',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: Theme.of(context).errorColor,
+          duration: Duration(seconds: 5),
+        ),
+      );
+      return;
+    }
 
     if (isValid) {
       setState(() {
@@ -111,53 +133,65 @@ class _AuthScreenState extends State<AuthScreen> {
       body: ModalProgressHUD(
         inAsyncCall: _showSpinner,
         child: Container(
+          alignment: Alignment.center,
+          height: double.infinity,
           width: double.infinity,
           decoration: kBodyBackgroundContainerDecoration,
-          child: Padding(
+          child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                (_isLoginMode) ? _buildLogoImage() : UserImagePicker(),
-                SizedBox(height: 20.0),
-                _buildForm(),
-                if (_isLoginMode) _buildForgotPasswordBtn(),
-                SizedBox(height: 19.0),
-                CustomizedGradientButton(
-                  title: (_isLoginMode ? 'Log in' : 'Register'),
-                  onTap: _trySubmit,
-                  gradientColors: [
-                    Colors.pink,
-                    Colors.purpleAccent,
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('or sign in with'),
-                ),
-                CustomizedGradientIconButton(
-                  title: 'Facebook',
-                  onTap: () async {
-                    setState(() {
-                      _showSpinner = true;
-                    });
-                    await _signInWithFacebook();
-                    setState(() {
-                      _showSpinner = false;
-                    });
-                  },
-                  gradientColors: [
-                    Colors.indigoAccent.shade400,
-                    Colors.lightBlue,
-                  ],
-                  icon: FaIcon(
-                    FontAwesomeIcons.facebook,
-                    color: Colors.black,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  (_isLoginMode)
+                      ? _buildLogoImage()
+                      : UserImagePicker(
+                          pickedImageFileFunc: _pickedImage,
+                        ),
+                  SizedBox(height: 20.0),
+                  _buildForm(),
+                  if (_isLoginMode) _buildForgotPasswordBtn(),
+                  SizedBox(height: 19.0),
+                  CustomizedGradientButton(
+                    title: (_isLoginMode ? 'Log in' : 'Register'),
+                    onTap: _trySubmit,
+                    gradientColors: [
+                      Colors.pink,
+                      Colors.purpleAccent,
+                    ],
                   ),
-                ),
-                SizedBox(height: 50.0),
-                _buildSignIpBtn(),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('or sign in with'),
+                  ),
+                  CustomizedGradientIconButton(
+                    title: 'Facebook',
+                    onTap: () async {
+                      setState(() {
+                        _showSpinner = true;
+                      });
+                      await _signInWithFacebook();
+                      setState(() {
+                        _showSpinner = false;
+                      });
+                    },
+                    gradientColors: [
+                      Colors.indigoAccent.shade400,
+                      Colors.lightBlue,
+                    ],
+                    icon: FaIcon(
+                      FontAwesomeIcons.facebook,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 50.0),
+                  _buildSignIpBtn(),
+                  SizedBox(height: 10.0),
+                ],
+              ),
             ),
           ),
         ),
