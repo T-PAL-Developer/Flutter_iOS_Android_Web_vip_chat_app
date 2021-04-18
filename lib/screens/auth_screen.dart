@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screen.dart';
@@ -97,7 +95,7 @@ class _AuthScreenState extends State<AuthScreen> {
         final ref = FirebaseStorage.instance
             .ref()
             .child('user_image')
-            .child('${authResult.uid}.jpg');
+            .child('${authResult.uid}');
 
         await ref.putData(_userImageFile);
 
@@ -125,6 +123,14 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       final authResult = await widget.auth.signInWithFacebook();
       print('Facebook sign in success! uid: ${authResult?.uid}');
+      await FirebaseFirestore.instance
+          .collection(CollectionUsers.id)
+          .doc(authResult.uid)
+          .set({
+        CollectionUsers.username: authResult.displayName,
+        CollectionUsers.email: authResult.email,
+        CollectionUsers.imageUrl: authResult.photoURL,
+      });
       if (authResult != null) {
         Navigator.pushNamedAndRemoveUntil(
             context, ChatScreen.id, (route) => false);

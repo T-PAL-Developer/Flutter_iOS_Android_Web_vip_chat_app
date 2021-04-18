@@ -37,7 +37,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           .collection(CollectionUsers.id)
           .doc(authResult.uid)
           .set({
-        CollectionUsers.username: 'Anonymous user',
+        CollectionUsers.username: test_id,
+        CollectionUsers.imageUrl: test_avatarURL,
       });
       if (authResult != null) {
         Navigator.pushNamedAndRemoveUntil(

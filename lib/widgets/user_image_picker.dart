@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
@@ -23,8 +21,8 @@ class _UserImagePickerState extends State<UserImagePicker> {
     try {
       final PickedFile pickedImage = await _picker.getImage(
         source: ImageSource.gallery,
-        imageQuality: 70,
-        maxWidth: 150,
+        imageQuality: 50,
+        maxWidth: 80,
       );
       final Uint8List pickedImageAsBytes = await pickedImage.readAsBytes();
 
