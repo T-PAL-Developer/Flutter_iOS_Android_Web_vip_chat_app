@@ -34,6 +34,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _showSpinner = false;
   bool _isLoginMode = false;
+  bool _isForgotPasswordMode = false;
   String _username;
   String _email;
   String _password;
@@ -140,6 +141,32 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  Future<bool> _resetPassword() async {
+    try {
+      await widget.auth.resetPassword(
+        email: _email.trim(),
+      );
+      return true;
+    } on FirebaseAuthException catch (e) {
+      helperFirebaseAuthException(e, context);
+      return false;
+    }
+  }
+
+  Future<void> _tryResetPassword() async {
+    final isValid = _formKey.currentState.validate();
+    FocusScope.of(context).unfocus();
+    if (isValid) {
+      _formKey.currentState.save();
+      final resetCompleted = await _resetPassword();
+      if (resetCompleted) {
+        setState(() {
+          _isForgotPasswordMode = !_isForgotPasswordMode;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -164,59 +191,128 @@ class _AuthScreenState extends State<AuthScreen> {
               constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  (_isLoginMode)
-                      ? _buildLogoImage()
-                      : UserImagePicker(
-                          pickedImageFileFunc: _pickedImage,
-                        ),
-                  SizedBox(height: 20.0),
-                  _buildForm(),
-                  if (_isLoginMode) _buildForgotPasswordBtn(),
-                  SizedBox(height: 19.0),
-                  CustomizedGradientButton(
-                    title: (_isLoginMode ? 'Log in' : 'Register'),
-                    onTap: _trySubmit,
-                    gradientColors: [
-                      Colors.pink,
-                      Colors.purpleAccent,
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('or sign in with'),
-                  ),
-                  CustomizedGradientIconButton(
-                    title: 'Facebook',
-                    onTap: () async {
-                      setState(() {
-                        _showSpinner = true;
-                      });
-                      await _signInWithFacebook();
-                      setState(() {
-                        _showSpinner = false;
-                      });
-                    },
-                    gradientColors: [
-                      Colors.indigoAccent.shade400,
-                      Colors.lightBlue,
-                    ],
-                    icon: FaIcon(
-                      FontAwesomeIcons.facebook,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 50.0),
-                  _buildSignIpBtn(),
-                  SizedBox(height: 10.0),
-                ],
-              ),
+              child: (_isForgotPasswordMode)
+                  ? _buildForgotPasswordContent()
+                  : _buildMainContent(),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildMainContent() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        (_isLoginMode)
+            ? _buildLogoImage()
+            : UserImagePicker(
+                pickedImageFileFunc: _pickedImage,
+              ),
+        SizedBox(height: 20.0),
+        _buildForm(),
+        if (_isLoginMode) _buildForgotPasswordBtn(),
+        SizedBox(height: 19.0),
+        CustomizedGradientButton(
+          title: (_isLoginMode ? 'Log in' : 'Register'),
+          onTap: _trySubmit,
+          gradientColors: [
+            Colors.pink,
+            Colors.purpleAccent,
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('or sign in with'),
+        ),
+        CustomizedGradientIconButton(
+          title: 'Facebook',
+          onTap: () async {
+            setState(() {
+              _showSpinner = true;
+            });
+            await _signInWithFacebook();
+            setState(() {
+              _showSpinner = false;
+            });
+          },
+          gradientColors: [
+            Colors.indigoAccent.shade400,
+            Colors.lightBlue,
+          ],
+          icon: FaIcon(
+            FontAwesomeIcons.facebook,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(height: 50.0),
+        _buildSignIpBtn(),
+        SizedBox(height: 10.0),
+      ],
+    );
+  }
+
+  Widget _buildForgotPasswordContent() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Forgot password?',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Enter your email and tap reset button',
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Form(
+              key: _formKey,
+              child: _buildEmailTextField(),
+            ),
+            SizedBox(height: 10.0),
+            CustomizedGradientButton(
+              title: ('Reset'),
+              onTap: _tryResetPassword,
+              gradientColors: [
+                Colors.pink,
+                Colors.purpleAccent,
+              ],
+            ),
+            SizedBox(height: 60.0),
+          ],
+        ),
+        Positioned(
+          bottom: 30,
+          child: TextButton.icon(
+            onPressed: () {
+              setState(() {
+                _isForgotPasswordMode = !_isForgotPasswordMode;
+              });
+            },
+            icon: Icon(
+              Icons.arrow_back_ios_rounded,
+              color: Colors.black87,
+            ),
+            label: Text(
+              'Back to login page',
+              style: TextStyle(
+                color: Colors.black87,
+                fontFamily: kFontSourceSansPro,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -250,25 +346,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 _username = value;
               },
             ),
-          CustomizedTextFormField(
-            key: ValueKey('email'),
-            keyboardType: TextInputType.emailAddress,
-            icon: Icon(
-              Icons.email,
-              color: Colors.black45,
-            ),
-            hintText: 'Enter your e-mail',
-            validator: (val) {
-              return RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                      .hasMatch(val)
-                  ? null
-                  : "Please Enter Correct Email";
-            },
-            onChanged: (value) {
-              _email = value;
-            },
-          ),
+          _buildEmailTextField(),
           CustomizedTextFormField(
             key: ValueKey('password'),
             icon: Icon(
@@ -289,6 +367,28 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
+  Widget _buildEmailTextField() {
+    return CustomizedTextFormField(
+      key: ValueKey('email'),
+      keyboardType: TextInputType.emailAddress,
+      icon: Icon(
+        Icons.email,
+        color: Colors.black45,
+      ),
+      hintText: 'Enter your e-mail',
+      validator: (val) {
+        return RegExp(
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                .hasMatch(val)
+            ? null
+            : "Please Enter Correct Email";
+      },
+      onChanged: (value) {
+        _email = value;
+      },
+    );
+  }
+
   Widget _buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
@@ -300,7 +400,11 @@ class _AuthScreenState extends State<AuthScreen> {
           fontSize: 13,
           color: Colors.blue,
           fontWeight: FontWeight.w600,
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              _isForgotPasswordMode = !_isForgotPasswordMode;
+            });
+          },
         ),
       ),
     );

@@ -12,8 +12,7 @@ You can find here:
 - How to incorporate Firebase into Flutter projects.
 - Firebase authentication to register and sign in users.
 - Facebook authentication to sign in mobile and web.
-- Animations using the Flutter Hero widget.
-- Aniamtions using Flutter's animation controller.
+- Animations using the Flutter Hero widget and  animation controller.
 - Firebase Firestore to store and retrieve data on the fly.
 - Firebase Storage to upload files.
 - Dependency Injections.

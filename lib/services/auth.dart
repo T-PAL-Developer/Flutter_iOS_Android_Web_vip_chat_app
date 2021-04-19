@@ -6,6 +6,7 @@ import 'package:vip_chat_app/services/authWeb.dart';
 abstract class AuthBase {
   User get currentUser;
   Future<User> signInAnonymously();
+  Future<void> resetPassword({String email});
   Future<User> signInWithEmailAndPassword({String email, String password});
   Future<User> createUserWithEmailAndPassword({String email, String password});
   Future<User> signInWithFacebook();
@@ -33,10 +34,21 @@ class Auth implements AuthBase {
   }
 
   @override
+  Future<void> resetPassword({String email}) async {
+    try {
+      return _firebaseAuth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print('Error -> Exception details:\n $e');
+      rethrow;
+    }
+  }
+
+  @override
   Future<User> signInWithEmailAndPassword(
       {String email, String password}) async {
     try {
-      final userCredential = await _firebaseAuth.signInWithCredential(
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(
         EmailAuthProvider.credential(email: email, password: password),
       );
       return userCredential.user;
@@ -50,7 +62,8 @@ class Auth implements AuthBase {
   Future<User> createUserWithEmailAndPassword(
       {String email, String password}) async {
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
