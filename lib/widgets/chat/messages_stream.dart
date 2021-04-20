@@ -1,0 +1,60 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
+
+import 'message_container.dart';
+
+class MessagesStream extends StatelessWidget {
+  const MessagesStream({Key key, @required this.loggedInUser})
+      : super(key: key);
+  final User loggedInUser;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection(CollectionGroupChat.id)
+          .orderBy(
+            CollectionGroupChat.createdAt,
+            descending: true,
+          )
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            height: 150.0,
+            child: Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.lightBlue,
+              ),
+            ),
+          );
+        }
+        if (snapshot.hasData) {
+          final chatDocs = snapshot.data.docs;
+          final currentUser = loggedInUser.uid;
+
+          return Expanded(
+            child: ListView.builder(
+              reverse: true,
+              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+              itemCount: chatDocs.length,
+              itemBuilder: (context, index) => MessageContainer(
+                text: chatDocs[index][CollectionGroupChat.text],
+                sender: chatDocs[index][CollectionGroupChat.sender],
+                currentUser:
+                    currentUser == chatDocs[index][CollectionGroupChat.uid],
+                userImageURL: chatDocs[index][CollectionGroupChat.imageUrl],
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error.toString()}');
+        } else {
+          return Text('unknown problem with database');
+        }
+      },
+    );
+  }
+}
