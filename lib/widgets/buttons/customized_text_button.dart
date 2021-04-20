@@ -25,7 +25,7 @@ class CustomizedTextButton extends StatelessWidget {
         color: (color != null) ? color : Colors.black87,
         fontFamily: fontFamily,
         fontWeight: (fontWeight != null) ? fontWeight : FontWeight.bold,
-        fontSize: (fontSize != null) ? fontSize : 15,
+        fontSize: (fontSize != null) ? fontSize : 17,
       ),
       hoverColor: Colors.transparent,
       splashColor: Colors.transparent,

@@ -55,7 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           leading: null,
           title: Text(
-            '️Chat',
+            '️GROUP CHAT',
             style: TextStyle(
                 fontFamily: kFontBungeeShade,
                 fontWeight: FontWeight.bold,
