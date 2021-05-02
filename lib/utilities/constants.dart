@@ -7,6 +7,8 @@ const String test_avatarURL =
 const kFontSourceSansPro = 'SourceSansPro';
 const kFontBungeeShade = 'BungeeShade';
 
+const kPrimaryColor = Colors.lightBlueAccent;
+
 const kAnimatedDrawerMenuTextStyle = TextStyle(
   color: Colors.black87,
   fontWeight: FontWeight.bold,

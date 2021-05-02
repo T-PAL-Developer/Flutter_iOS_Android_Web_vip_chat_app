@@ -61,7 +61,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 fontWeight: FontWeight.bold,
                 color: Colors.black),
           ),
-          backgroundColor: Colors.lightBlueAccent,
         ),
         body: SafeArea(
           child: Column(

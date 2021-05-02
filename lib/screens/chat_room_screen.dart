@@ -33,7 +33,17 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 fontWeight: FontWeight.bold,
                 color: Colors.black),
           ),
-          backgroundColor: Colors.lightBlueAccent,
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.search),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchScreen(),
+              ),
+            );
+          },
         ),
         body: SafeArea(
           child: Container(),
