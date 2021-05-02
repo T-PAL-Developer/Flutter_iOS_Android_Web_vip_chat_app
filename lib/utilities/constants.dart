@@ -9,6 +9,11 @@ const kFontBungeeShade = 'BungeeShade';
 
 const kPrimaryColor = Colors.lightBlueAccent;
 
+const kAppBarTextStyle = TextStyle(
+    fontFamily: kFontBungeeShade,
+    fontWeight: FontWeight.bold,
+    color: Colors.black);
+
 const kAnimatedDrawerMenuTextStyle = TextStyle(
   color: Colors.black87,
   fontWeight: FontWeight.bold,

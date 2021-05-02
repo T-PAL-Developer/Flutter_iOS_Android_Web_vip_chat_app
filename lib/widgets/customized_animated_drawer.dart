@@ -1,4 +1,5 @@
 import 'package:animated_drawer/bloc/home_page_bloc.dart';
+import 'package:animated_drawer/bloc/shadow_bloc.dart';
 import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,14 +10,20 @@ import 'package:vip_chat_app/screens/welcome_screen.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 
-class CustomizedAnimatedDrawer extends StatelessWidget {
+class CustomizedAnimatedDrawer extends StatefulWidget {
   const CustomizedAnimatedDrawer(
       {Key key, @required this.homePageContent, @required this.authentication})
       : super(key: key);
 
-  final homePageContent;
+  final Widget homePageContent;
   final AuthBase authentication;
 
+  @override
+  _CustomizedAnimatedDrawerState createState() =>
+      _CustomizedAnimatedDrawerState();
+}
+
+class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
   @override
   Widget build(BuildContext context) {
     return AnimatedDrawer(
@@ -38,7 +45,16 @@ class CustomizedAnimatedDrawer extends StatelessWidget {
         colors: [Colors.lightBlueAccent, Color(0xFF1f186f)],
       ),
       menuPageContent: _buildMenuPageContent(context),
-      homePageContent: homePageContent,
+      homePageContent: GestureDetector(
+        onTap: () {
+          if (HomePageBloc.isOpen)
+            setState(() {
+              HomePageBloc().closeDrawer();
+              ShadowBLOC().closeDrawer();
+            });
+        },
+        child: widget.homePageContent,
+      ),
     );
   }
 
@@ -168,7 +184,7 @@ class CustomizedAnimatedDrawer extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          authentication.signOut();
+          widget.authentication.signOut();
           Navigator.pushNamedAndRemoveUntil(
               context, WelcomeScreen.id, (route) => false);
         },

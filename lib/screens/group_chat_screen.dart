@@ -56,10 +56,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           leading: null,
           title: Text(
             '️GROUP CHAT',
-            style: TextStyle(
-                fontFamily: kFontBungeeShade,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
+            style: kAppBarTextStyle,
           ),
         ),
         body: SafeArea(

@@ -28,6 +28,15 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.dark().copyWith(
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
+          appBarTheme: AppBarTheme(
+            textTheme: TextTheme(),
+            iconTheme: IconThemeData(
+              color: Colors.black, //change your color here
+            ),
+          ),
           primaryColor: kPrimaryColor,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: kPrimaryColor,

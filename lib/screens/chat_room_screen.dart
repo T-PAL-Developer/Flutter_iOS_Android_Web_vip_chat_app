@@ -22,16 +22,10 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         appBar: AppBar(
           centerTitle: true,
           automaticallyImplyLeading: false,
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
           leading: null,
           title: Text(
             '️PRIVATE CHATS ROOM',
-            style: TextStyle(
-                fontFamily: kFontBungeeShade,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
+            style: kAppBarTextStyle,
           ),
         ),
         floatingActionButton: FloatingActionButton(
