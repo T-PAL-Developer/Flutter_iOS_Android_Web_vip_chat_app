@@ -17,12 +17,10 @@ class _SearchScreenState extends State<SearchScreen> {
           style: kAppBarTextStyle,
         ),
       ),
-      body: Container(
-        child: Row(
-          children: [
-            TextField(),
-          ],
-        ),
+      body: Row(
+        children: [
+          Text('kkkk'),
+        ],
       ),
     );
   }

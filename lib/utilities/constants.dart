@@ -8,6 +8,7 @@ const kFontSourceSansPro = 'SourceSansPro';
 const kFontBungeeShade = 'BungeeShade';
 
 const kPrimaryColor = Colors.lightBlueAccent;
+const kBackgroundColor = Color(0xFF303030);
 
 const kAppBarTextStyle = TextStyle(
     fontFamily: kFontBungeeShade,

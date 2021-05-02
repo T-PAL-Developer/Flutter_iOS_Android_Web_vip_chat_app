@@ -60,49 +60,52 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           ),
         ),
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              MessagesStream(
-                loggedInUser: _loggedInUser,
-              ),
-              Container(
-                decoration: kMessageContainerDecoration,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: TextField(
-                        textInputAction: TextInputAction.search,
-                        controller: messageTextController,
-                        decoration: kMessageTextFieldDecoration,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: kFontSourceSansPro,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _messageText = value;
-                          });
-                        },
-                        onEditingComplete:
-                            _messageText.trim().isEmpty ? null : _sendMessage,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed:
-                          _messageText.trim().isEmpty ? null : _sendMessage,
-                      child: Text(
-                        'Send',
-                        style: kSendButtonTextStyle,
-                      ),
-                    ),
-                  ],
+          child: Container(
+            color: kBackgroundColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                MessagesStream(
+                  loggedInUser: _loggedInUser,
                 ),
-              ),
-            ],
+                Container(
+                  decoration: kMessageContainerDecoration,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          textInputAction: TextInputAction.search,
+                          controller: messageTextController,
+                          decoration: kMessageTextFieldDecoration,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: kFontSourceSansPro,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _messageText = value;
+                            });
+                          },
+                          onEditingComplete:
+                              _messageText.trim().isEmpty ? null : _sendMessage,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed:
+                            _messageText.trim().isEmpty ? null : _sendMessage,
+                        child: Text(
+                          'Send',
+                          style: kSendButtonTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

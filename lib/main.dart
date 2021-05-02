@@ -38,6 +38,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
           primaryColor: kPrimaryColor,
+          backgroundColor: kBackgroundColor,
+          scaffoldBackgroundColor: kBackgroundColor,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: kPrimaryColor,
           ),

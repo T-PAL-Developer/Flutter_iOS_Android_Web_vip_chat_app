@@ -40,7 +40,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           },
         ),
         body: SafeArea(
-          child: Container(),
+          child: Container(
+            color: kBackgroundColor,
+          ),
         ),
       ),
     );

@@ -27,14 +27,14 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
   @override
   Widget build(BuildContext context) {
     return AnimatedDrawer(
-      homePageXValue: 150,
+      homePageXValue: 170,
       homePageYValue: 80,
-      homePageAngle: -0.2,
+      homePageAngle: -0.1,
       homePageSpeed: 250,
-      shadowXValue: 122,
-      shadowYValue: 110,
-      shadowAngle: -0.275,
-      shadowSpeed: 350,
+      shadowXValue: 140,
+      shadowYValue: 50,
+      shadowAngle: -0.125,
+      shadowSpeed: 300,
       openIcon: Padding(
         padding: const EdgeInsets.all(9.0),
         child: Icon(Icons.menu_open, color: Colors.black),
@@ -42,7 +42,11 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
       closeIcon: Icon(Icons.arrow_back_ios, color: Colors.black),
       shadowColor: Colors.black54,
       backgroundGradient: LinearGradient(
-        colors: [Colors.lightBlueAccent, Color(0xFF1f186f)],
+        colors: [
+          kPrimaryColor,
+          Color(0xFF1f186f),
+          kBackgroundColor,
+        ],
       ),
       menuPageContent: _buildMenuPageContent(context),
       homePageContent: GestureDetector(
@@ -62,52 +66,54 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
     return Padding(
       padding: const EdgeInsets.only(top: 100.0, left: 15),
       child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              height: 100.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(30.0),
-                  bottomLeft: Radius.circular(30.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                height: 100.0,
+                width: 100.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30.0),
+                    bottomLeft: Radius.circular(30.0),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 50.0,
+                      child: Image.asset('images/logo.png'),
+                    ),
+                    Text(
+                      "CHAT",
+                      style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.black,
+                          fontFamily: kFontBungeeShade,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 50.0,
-                    child: Image.asset('images/logo.png'),
-                  ),
-                  Text(
-                    "CHAT",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.black,
-                        fontFamily: kFontBungeeShade,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+              Padding(padding: EdgeInsets.only(bottom: 50)),
+              _buildGroupChatBtn(context),
+              Padding(padding: EdgeInsets.only(bottom: 40)),
+              _buildPrivateChatsBtn(context),
+              Padding(padding: EdgeInsets.only(bottom: 50)),
+              Divider(
+                color: Colors.black87,
+                thickness: 2,
               ),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 50)),
-            _buildGroupChatBtn(context),
-            Padding(padding: EdgeInsets.only(bottom: 40)),
-            _buildPrivateChatsBtn(context),
-            Padding(padding: EdgeInsets.only(bottom: 50)),
-            Divider(
-              color: Colors.black87,
-              thickness: 2,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 50)),
-            _buildLogoutBtn(context),
-            Padding(padding: EdgeInsets.only(bottom: 40)),
-            _buildAboutBtn(),
-            Padding(padding: EdgeInsets.only(bottom: 50)),
-          ],
+              Padding(padding: EdgeInsets.only(bottom: 50)),
+              _buildLogoutBtn(context),
+              Padding(padding: EdgeInsets.only(bottom: 40)),
+              _buildAboutBtn(),
+              Padding(padding: EdgeInsets.only(bottom: 50)),
+            ],
+          ),
         ),
       ),
     );
