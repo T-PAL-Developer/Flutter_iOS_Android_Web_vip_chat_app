@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
-import 'package:vip_chat_app/screens/chat_screen.dart';
+import 'package:vip_chat_app/screens/group_chat_screen.dart';
 import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/buttons/customized_gradient_button.dart';
@@ -42,7 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       });
       if (authResult != null) {
         Navigator.pushNamedAndRemoveUntil(
-            context, ChatScreen.id, (route) => false);
+            context, GroupChatScreen.id, (route) => false);
       }
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);

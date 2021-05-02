@@ -7,16 +7,16 @@ import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/widgets/chat/messages_stream.dart';
 import 'package:vip_chat_app/widgets/customized_animated_drawer.dart';
 
-class ChatScreen extends StatefulWidget {
-  static const String id = 'chat_screen';
-  const ChatScreen({Key key, @required this.auth}) : super(key: key);
+class GroupChatScreen extends StatefulWidget {
+  static const String id = 'group_chat_screen';
+  const GroupChatScreen({Key key, @required this.auth}) : super(key: key);
   final AuthBase auth;
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _GroupChatScreenState createState() => _GroupChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _GroupChatScreenState extends State<GroupChatScreen> {
   final messageTextController = TextEditingController();
   User _loggedInUser;
   String _messageText = '';

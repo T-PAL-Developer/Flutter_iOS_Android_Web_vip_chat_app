@@ -1,7 +1,10 @@
+import 'package:animated_drawer/bloc/home_page_bloc.dart';
 import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vip_chat_app/screens/chat_room_screen.dart';
+import 'package:vip_chat_app/screens/group_chat_screen.dart';
 import 'package:vip_chat_app/screens/welcome_screen.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
@@ -75,9 +78,9 @@ class CustomizedAnimatedDrawer extends StatelessWidget {
               ),
             ),
             Padding(padding: EdgeInsets.only(bottom: 50)),
-            _buildGroupChatBtn(),
+            _buildGroupChatBtn(context),
             Padding(padding: EdgeInsets.only(bottom: 40)),
-            _buildPrivateChatsBtn(),
+            _buildPrivateChatsBtn(context),
             Padding(padding: EdgeInsets.only(bottom: 50)),
             Divider(
               color: Colors.black87,
@@ -94,11 +97,15 @@ class CustomizedAnimatedDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildGroupChatBtn() {
+  Widget _buildGroupChatBtn(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          HomePageBloc().closeDrawer();
+          Navigator.pushNamedAndRemoveUntil(
+              context, GroupChatScreen.id, (route) => false);
+        },
         child: Row(
           children: [
             FaIcon(
@@ -123,11 +130,15 @@ class CustomizedAnimatedDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildPrivateChatsBtn() {
+  Widget _buildPrivateChatsBtn(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          HomePageBloc().closeDrawer();
+          Navigator.pushNamedAndRemoveUntil(
+              context, ChatRoomScreen.id, (route) => false);
+        },
         child: Row(
           children: [
             FaIcon(
@@ -158,7 +169,8 @@ class CustomizedAnimatedDrawer extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           authentication.signOut();
-          Navigator.pushReplacementNamed(context, WelcomeScreen.id);
+          Navigator.pushNamedAndRemoveUntil(
+              context, WelcomeScreen.id, (route) => false);
         },
         child: Row(
           children: [
