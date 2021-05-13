@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vip_chat_app/services/auth.dart';
+import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/group_chat_screen.dart';
 import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
@@ -32,6 +32,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
+  final Database _database = Database();
   bool _showSpinner = false;
   bool _isLoginMode = false;
   bool _isForgotPasswordMode = false;
@@ -79,41 +80,29 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _submitAuthForm() async {
     try {
       if (_isLoginMode) {
-        final authResult = await widget.auth.signInWithEmailAndPassword(
-          email: _email.trim(),
-          password: _password.trim(),
-        );
-        if (authResult != null) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, GroupChatScreen.id, (route) => false);
-        }
+        await widget.auth
+            .signInWithEmailAndPassword(
+              email: _email.trim(),
+              password: _password.trim(),
+            )
+            .then((value) => Navigator.pushNamedAndRemoveUntil(
+                context, GroupChatScreen.id, (route) => false));
       } else {
-        final authResult = await widget.auth.createUserWithEmailAndPassword(
+        await widget.auth
+            .createUserWithEmailAndPassword(
           email: _email.trim(),
           password: _password.trim(),
+        )
+            .then(
+          (authResult) async {
+            final userImageUrl =
+                await _database.uploadUserImage(authResult, _userImageFile);
+            await _database.uploadUserInfo(
+                authResult, _username, _email, userImageUrl);
+            Navigator.pushNamedAndRemoveUntil(
+                context, GroupChatScreen.id, (route) => false);
+          },
         );
-
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('user_image')
-            .child('${authResult.uid}');
-
-        await ref.putData(_userImageFile);
-
-        final url = await ref.getDownloadURL();
-
-        await FirebaseFirestore.instance
-            .collection(CollectionUsers.id)
-            .doc(authResult.uid)
-            .set({
-          CollectionUsers.username: _username,
-          CollectionUsers.email: _email,
-          CollectionUsers.imageUrl: url,
-        });
-        if (authResult != null) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, GroupChatScreen.id, (route) => false);
-        }
       }
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
@@ -122,20 +111,14 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _signInWithFacebook() async {
     try {
-      final authResult = await widget.auth.signInWithFacebook();
-      print('Facebook sign in success! uid: ${authResult?.uid}');
-      await FirebaseFirestore.instance
-          .collection(CollectionUsers.id)
-          .doc(authResult.uid)
-          .set({
-        CollectionUsers.username: authResult.displayName,
-        CollectionUsers.email: authResult.email,
-        CollectionUsers.imageUrl: authResult.photoURL,
-      });
-      if (authResult != null) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, GroupChatScreen.id, (route) => false);
-      }
+      await widget.auth.signInWithFacebook().then(
+        (authResult) async {
+          _database.uploadUserInfo(authResult, authResult.displayName,
+              authResult.email, authResult.photoURL);
+          Navigator.pushNamedAndRemoveUntil(
+              context, GroupChatScreen.id, (route) => false);
+        },
+      );
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
     }
