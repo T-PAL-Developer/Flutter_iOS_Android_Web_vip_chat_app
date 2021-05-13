@@ -44,7 +44,7 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
       backgroundGradient: LinearGradient(
         colors: [
           kPrimaryColor,
-          Color(0xFF1f186f),
+          Color(0xff3f3fba),
           kBackgroundColor,
         ],
       ),

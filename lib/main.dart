@@ -28,27 +28,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.dark().copyWith(
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-          appBarTheme: AppBarTheme(
-            textTheme: TextTheme(),
-            iconTheme: IconThemeData(
-              color: Colors.black, //change your color here
-            ),
-          ),
+          iconTheme: kIconThemeData,
+          appBarTheme: kAppBarTheme,
           primaryColor: kPrimaryColor,
           backgroundColor: kBackgroundColor,
           scaffoldBackgroundColor: kBackgroundColor,
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: kPrimaryColor,
-          ),
-          textTheme: TextTheme(
-            bodyText2: TextStyle(
-                color: Colors.black54,
-                fontSize: 14,
-                fontWeight: FontWeight.normal),
-          ),
+          floatingActionButtonTheme: kFloatingActionButtonThemeData,
+          elevatedButtonTheme: kElevatedButtonThemeData,
+          textTheme: kTextTheme,
         ),
         initialRoute:
             // ChatRoomScreen.id,

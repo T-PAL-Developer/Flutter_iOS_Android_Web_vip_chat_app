@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -8,15 +7,14 @@ import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/group_chat_screen.dart';
-import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/buttons/customized_gradient_icon_button.dart';
 import 'package:vip_chat_app/widgets/buttons/customized_gradient_button.dart';
 import 'package:vip_chat_app/widgets/buttons/customized_text_button.dart';
-import 'package:vip_chat_app/widgets/customized_text_form_field.dart';
+import 'package:vip_chat_app/widgets/auth/customized_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:vip_chat_app/widgets/user_image_picker.dart';
+import 'package:vip_chat_app/widgets/auth/user_image_picker.dart';
 
 class AuthScreen extends StatefulWidget {
   static const String id = 'auth_screen';

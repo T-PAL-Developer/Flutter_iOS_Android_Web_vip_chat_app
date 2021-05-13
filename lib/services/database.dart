@@ -5,7 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 
 class Database {
-  getUserByUsername() {}
+  Future<QuerySnapshot> getUserByUsername(username) async {
+    return await FirebaseFirestore.instance
+        .collection(CollectionUsers.id)
+        .where(CollectionUsers.username, isEqualTo: username)
+        .get();
+  }
 
   Future<String> uploadUserImage(
       User authResult, Uint8List userImageFile) async {
