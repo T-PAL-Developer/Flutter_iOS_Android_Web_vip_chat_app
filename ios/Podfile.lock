@@ -240,12 +240,19 @@ PODS:
   - Firebase/Firestore (7.3.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 7.3.0)
+  - Firebase/Storage (7.3.0):
+    - Firebase/CoreOnly
+    - FirebaseStorage (~> 7.3.0)
   - firebase_auth (1.1.0):
     - Firebase/Auth (= 7.3.0)
     - firebase_core
     - Flutter
   - firebase_core (1.0.3):
     - Firebase/CoreOnly (= 7.3.0)
+    - Flutter
+  - firebase_storage (8.0.3):
+    - Firebase/Storage (= 7.3.0)
+    - firebase_core
     - Flutter
   - FirebaseAuth (7.3.0):
     - FirebaseCore (~> 7.0)
@@ -273,6 +280,9 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 2.30906.0)
+  - FirebaseStorage (7.3.0):
+    - FirebaseCore (~> 7.0)
+    - GTMSessionFetcher/Core (~> 1.4)
   - Flutter (1.0.0)
   - flutter_login_facebook (0.5.0):
     - FBSDKLoginKit (~> 9.1)
@@ -333,6 +343,7 @@ DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
   - flutter_login_facebook (from `.symlinks/plugins/flutter_login_facebook/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
@@ -348,6 +359,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseFirestore
+    - FirebaseStorage
     - GoogleDataTransport
     - GoogleUtilities
     - "gRPC-C++"
@@ -364,6 +376,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_storage:
+    :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
   flutter_login_facebook:
@@ -380,10 +394,12 @@ SPEC CHECKSUMS:
   Firebase: 26223c695fe322633274198cb19dca8cb7e54416
   firebase_auth: d09964a120e218411768f5ca2d3ce938abd319f2
   firebase_core: b5d81dfd4fb2d6f700e67de34d9a633ae325c4e9
+  firebase_storage: 2ce2146c1fa764e68330e6998fa386522c95d199
   FirebaseAuth: c224a0cf1afa0949bd5c7bfcf154b4f5ce8ddef2
   FirebaseCore: 4d3c72622ce0e2106aaa07bb4b2935ba2c370972
   FirebaseCoreDiagnostics: d50e11039e5984d92c8a512be2395f13df747350
   FirebaseFirestore: 1906bf163afdb7c432d2e3b5c40ceb9dd2df5820
+  FirebaseStorage: 5002b1895bfe74a5ce92ad54f966e6162d0da2e5
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_login_facebook: 41fcf15687d2ce7a75bb89aa3476df54a00845a3
   GoogleDataTransport: 116c84c4bdeb76be2a7a46de51244368f9794eab

@@ -7,6 +7,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  TextEditingController searchTextEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,10 +19,39 @@ class _SearchScreenState extends State<SearchScreen> {
           style: kAppBarTextStyle,
         ),
       ),
-      body: Row(
-        children: [
-          Text('kkkk'),
-        ],
+      body: SafeArea(
+        child: Container(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: searchTextEditingController,
+                        decoration: InputDecoration(
+                          hintText: 'Search for username...',
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.lightBlueAccent, width: 2.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20.0, right: 10.0),
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

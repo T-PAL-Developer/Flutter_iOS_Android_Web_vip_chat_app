@@ -24,7 +24,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           automaticallyImplyLeading: false,
           leading: null,
           title: Text(
-            '️PRIVATE CHATS ROOM',
+            '️CHATS ROOM',
             style: kAppBarTextStyle,
           ),
         ),
