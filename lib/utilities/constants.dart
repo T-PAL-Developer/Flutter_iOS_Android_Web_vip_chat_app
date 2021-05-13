@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 //TEST USER
-const String test_id = 'Anonymous user';
-const String test_avatarURL =
+const String kTest_id = 'Anonymous user';
+const String kTest_email = 'test@test.test';
+const String kTest_avatarURL =
     'https://firebasestorage.googleapis.com/v0/b/vip-chatt.appspot.com/o/user_image%2FFu2d3jPaZbdv9PDIdlQEzqU4pho1?alt=media&token=e1ff37fe-932e-4904-9c89-82eac0553ecc';
 
 // FONTS

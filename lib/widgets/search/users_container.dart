@@ -11,7 +11,7 @@ class UsersContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 16, right: 38),
+      padding: EdgeInsets.only(top: 16, right: 42),
       constraints: BoxConstraints(maxWidth: 200.0),
       child: Row(
         children: [

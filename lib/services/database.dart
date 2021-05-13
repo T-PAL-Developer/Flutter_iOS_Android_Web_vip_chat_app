@@ -5,6 +5,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 
 class Database {
+  Future<void> uploadMessage(User user, String messageText) async {
+    final userData = await FirebaseFirestore.instance
+        .collection(CollectionUsers.id)
+        .doc(user.uid)
+        .get();
+    FirebaseFirestore.instance.collection(CollectionGroupChat.id).add({
+      CollectionGroupChat.text: messageText,
+      CollectionGroupChat.sender:
+          user.displayName ?? userData[CollectionUsers.username],
+      CollectionGroupChat.createdAt: Timestamp.now(),
+      CollectionGroupChat.uid: user.uid,
+      CollectionGroupChat.imageUrl: userData[CollectionUsers.imageUrl]
+    });
+  }
+
   Future<QuerySnapshot> getUserByUsername(username) async {
     return await FirebaseFirestore.instance
         .collection(CollectionUsers.id)

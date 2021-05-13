@@ -15,7 +15,6 @@ You can find here:
 - Animations using the Flutter Hero widget and  animation controller.
 - Firebase Firestore to store and retrieve data on the fly.
 - Firebase Storage to upload files.
-- Dependency Injections.
 - Push notifications.
 - Streams.
 

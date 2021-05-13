@@ -1,11 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vip_chat_app/services/auth.dart';
+import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/group_chat_screen.dart';
-import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/buttons/customized_gradient_button.dart';
 import 'package:vip_chat_app/widgets/buttons/customized_text_button.dart';
@@ -25,6 +24,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
   bool _showSpinner = false;
+  final Database _database = Database();
   AnimationController _controller;
   Animation _animation;
   Animation _curvedAnimation;
@@ -33,17 +33,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     try {
       final authResult = await widget.auth.signInAnonymously();
       print('Anonymous sign in success! uid: ${authResult?.uid}');
-      await FirebaseFirestore.instance
-          .collection(CollectionUsers.id)
-          .doc(authResult.uid)
-          .set({
-        CollectionUsers.username: test_id,
-        CollectionUsers.imageUrl: test_avatarURL,
-      });
-      if (authResult != null) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, GroupChatScreen.id, (route) => false);
-      }
+      await _database
+          .uploadUserInfo(authResult, kTest_id, kTest_email, kTest_avatarURL)
+          .then(
+            (value) => Navigator.pushNamedAndRemoveUntil(
+                context, GroupChatScreen.id, (route) => false),
+          );
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
     }
