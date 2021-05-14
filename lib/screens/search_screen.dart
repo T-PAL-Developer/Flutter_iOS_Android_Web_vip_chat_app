@@ -1,24 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
-import 'package:vip_chat_app/utilities/constantsFirebaseDB.dart';
+import 'package:vip_chat_app/utilities/constants_firebase.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/search/users_container.dart';
 
+import 'chat_room_screen.dart';
+
 class SearchScreen extends StatefulWidget {
+  static const String id = 'search_screen';
+  const SearchScreen({Key key, @required this.auth}) : super(key: key);
+  final AuthBase auth;
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
   final Database _database = Database();
-  final TextEditingController _searchTextEditingController =
-      TextEditingController();
+  final TextEditingController _searchTextEditingController = TextEditingController();
   QuerySnapshot _searchSnapshot;
+  User _loggedInUser;
 
-  _findUser() async {
+  Future<void> _findUser() async {
     FocusScope.of(context).unfocus();
     try {
       await _database.getUserByUsername(_searchTextEditingController.text).then(
@@ -47,6 +53,39 @@ class _SearchScreenState extends State<SearchScreen> {
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
     }
+  }
+
+  _createChatRoom({String searchedUserUid, String searchedUserUrl, String searchedUserName}) async {
+    List<String> usersUid = [_loggedInUser.uid, searchedUserUid];
+    List<String> usersImagesUrl = [_loggedInUser.photoURL, searchedUserUrl];
+    List<String> usersNames = [_loggedInUser.photoURL, searchedUserName];
+    String chatRoomId = _createChatRoomId(_loggedInUser.uid, searchedUserUid);
+
+    Map<String, dynamic> chatRoomUsersInfoMap = {
+      CollectionChatsRooms.chatRoomId: chatRoomId,
+      CollectionChatsRooms.users: usersNames,
+      CollectionChatsRooms.imagesUrl: usersImagesUrl,
+      CollectionChatsRooms.usersUid: usersUid,
+    };
+    try {
+      await _database.createChatRoom(chatRoomUsersInfoMap, chatRoomId).then((value) =>
+          Navigator.pushNamedAndRemoveUntil(context, ChatRoomScreen.id, (route) => false));
+    } on FirebaseAuthException catch (e) {
+      helperFirebaseAuthException(e, context);
+    }
+  }
+
+  _createChatRoomId(String a, String b) {
+    if (a.substring(0, 4).codeUnitAt(0) > b.substring(0, 4).codeUnitAt(0)) {
+      return "$b\_$a";
+    } else {
+      return "$a\_$b";
+    }
+  }
+
+  void initState() {
+    super.initState();
+    _loggedInUser = widget.auth.currentUser;
   }
 
   @override
@@ -90,8 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
             decoration: InputDecoration(
               hintText: 'Search for username...',
               focusedBorder: UnderlineInputBorder(
-                borderSide:
-                    BorderSide(color: Colors.lightBlueAccent, width: 2.0),
+                borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
               ),
             ),
           ),
@@ -114,13 +152,19 @@ class _SearchScreenState extends State<SearchScreen> {
             child: ListView.builder(
               itemCount: _searchSnapshot.docs.length,
               itemBuilder: (context, index) {
+                final snapshot = _searchSnapshot.docs[index].data();
                 return ConstrainedBox(
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   child: UsersContainer(
-                    userName: _searchSnapshot.docs[index]
-                        .data()[CollectionUsers.username],
-                    userImageUrl: _searchSnapshot.docs[index]
-                        .data()[CollectionUsers.imageUrl],
+                    userName: snapshot[CollectionUsers.username],
+                    userImageUrl: snapshot[CollectionUsers.imageUrl],
+                    onPressed: () {
+                      _createChatRoom(
+                        searchedUserName: snapshot[CollectionUsers.username],
+                        searchedUserUid: snapshot[CollectionUsers.uid],
+                        searchedUserUrl: snapshot[CollectionUsers.imageUrl],
+                      );
+                    },
                   ),
                 );
               },

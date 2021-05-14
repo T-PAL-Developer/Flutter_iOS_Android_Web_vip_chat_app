@@ -31,12 +31,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.search),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SearchScreen(),
-              ),
-            );
+            Navigator.pushNamed(context, SearchScreen.id);
           },
         ),
         body: SafeArea(

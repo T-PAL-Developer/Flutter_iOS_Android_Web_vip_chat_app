@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vip_chat_app/screens/chat_room_screen.dart';
+import 'package:vip_chat_app/screens/search_screen.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'screens/group_chat_screen.dart';
 import 'screens/welcome_screen.dart';
@@ -41,9 +42,10 @@ class MyApp extends StatelessWidget {
             // ChatRoomScreen.id,
             _auth.currentUser != null ? GroupChatScreen.id : WelcomeScreen.id,
         routes: {
-          ChatRoomScreen.id: (context) => ChatRoomScreen(auth: Auth()),
           WelcomeScreen.id: (context) => WelcomeScreen(auth: Auth()),
           GroupChatScreen.id: (context) => GroupChatScreen(auth: Auth()),
+          ChatRoomScreen.id: (context) => ChatRoomScreen(auth: Auth()),
+          SearchScreen.id: (context) => SearchScreen(auth: Auth()),
         },
       ),
     );

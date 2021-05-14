@@ -3,10 +3,11 @@ import 'package:vip_chat_app/utilities/constants.dart';
 
 class UsersContainer extends StatelessWidget {
   const UsersContainer(
-      {Key key, @required this.userName, @required this.userImageUrl})
+      {Key key, @required this.userName, @required this.userImageUrl, this.onPressed})
       : super(key: key);
   final String userName;
   final String userImageUrl;
+  final Function onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class UsersContainer extends StatelessWidget {
           IconButton(
             color: Colors.white,
             icon: Icon(Icons.person_add_rounded),
-            onPressed: () {},
+            onPressed: onPressed,
           ),
         ],
       ),

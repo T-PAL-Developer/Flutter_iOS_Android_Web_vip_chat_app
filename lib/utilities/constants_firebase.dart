@@ -12,4 +12,17 @@ class CollectionUsers {
   static const String username = 'username';
   static const String email = 'email';
   static const String imageUrl = 'image_url';
+  static const String uid = 'uid';
+}
+
+class CollectionChatsRooms {
+  static const String id = 'chat_rooms';
+  static const String chatRoomId = 'chat_room_id';
+  static const String users = 'users';
+  static const String imagesUrl = 'images_url';
+  static const String usersUid = 'uid';
+}
+
+class Storage {
+  static const String usersImages = 'user_image';
 }

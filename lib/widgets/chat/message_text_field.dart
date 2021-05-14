@@ -4,7 +4,7 @@ import 'package:vip_chat_app/utilities/constants.dart';
 
 class MessageTextField extends StatelessWidget {
   const MessageTextField(
-      {Key key, this.messageTextController, this.onChanged, this.onSend})
+      {Key key, @required this.messageTextController, this.onChanged, this.onSend})
       : super(key: key);
 
   final TextEditingController messageTextController;

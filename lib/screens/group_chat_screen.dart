@@ -3,6 +3,8 @@ import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vip_chat_app/utilities/constants_firebase.dart';
+import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/chat/message_text_field.dart';
 import 'package:vip_chat_app/widgets/chat/messages_stream.dart';
 import 'package:vip_chat_app/widgets/customized_animated_drawer.dart';
@@ -19,8 +21,8 @@ class GroupChatScreen extends StatefulWidget {
 class _GroupChatScreenState extends State<GroupChatScreen> {
   final TextEditingController _messageTextController = TextEditingController();
   final Database _database = Database();
-  User _loggedInUser;
   String _messageText = '';
+  User _loggedInUser;
 
   void initState() {
     super.initState();
@@ -29,7 +31,11 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
   Future<void> _sendMessage() async {
     FocusScope.of(context).unfocus();
-    _database.uploadMessage(_loggedInUser, _messageText);
+    try {
+      await _database.uploadMessage(_loggedInUser, _messageText);
+    } on FirebaseAuthException catch (e) {
+      helperFirebaseAuthException(e, context);
+    }
     _messageTextController.clear();
   }
 
@@ -62,6 +68,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   MessagesStream(
+                    stream: _database.getChatContent(CollectionGroupChat.id),
                     loggedInUser: _loggedInUser,
                   ),
                   MessageTextField(

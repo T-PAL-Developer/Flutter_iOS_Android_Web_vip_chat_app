@@ -19,8 +19,7 @@ import 'package:vip_chat_app/widgets/auth/user_image_picker.dart';
 class AuthScreen extends StatefulWidget {
   static const String id = 'auth_screen';
 
-  const AuthScreen({Key key, this.isLogin, @required this.auth})
-      : super(key: key);
+  const AuthScreen({Key key, this.isLogin, @required this.auth}) : super(key: key);
   final bool isLogin;
   final AuthBase auth;
 
@@ -83,8 +82,8 @@ class _AuthScreenState extends State<AuthScreen> {
               email: _email.trim(),
               password: _password.trim(),
             )
-            .then((value) => Navigator.pushNamedAndRemoveUntil(
-                context, GroupChatScreen.id, (route) => false));
+            .then((value) =>
+                Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false));
       } else {
         await widget.auth
             .createUserWithEmailAndPassword(
@@ -93,12 +92,9 @@ class _AuthScreenState extends State<AuthScreen> {
         )
             .then(
           (authResult) async {
-            final userImageUrl =
-                await _database.uploadUserImage(authResult, _userImageFile);
-            await _database.uploadUserInfo(
-                authResult, _username, _email, userImageUrl);
-            Navigator.pushNamedAndRemoveUntil(
-                context, GroupChatScreen.id, (route) => false);
+            final userImageUrl = await _database.uploadUserImage(authResult, _userImageFile);
+            await _database.uploadUserInfo(authResult, _username, _email, userImageUrl);
+            Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false);
           },
         );
       }
@@ -111,10 +107,9 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       await widget.auth.signInWithFacebook().then(
         (authResult) async {
-          _database.uploadUserInfo(authResult, authResult.displayName,
-              authResult.email, authResult.photoURL);
-          Navigator.pushNamedAndRemoveUntil(
-              context, GroupChatScreen.id, (route) => false);
+          _database.uploadUserInfo(
+              authResult, authResult.displayName, authResult.email, authResult.photoURL);
+          Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false);
         },
       );
     } on FirebaseAuthException catch (e) {
@@ -172,9 +167,7 @@ class _AuthScreenState extends State<AuthScreen> {
               constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height,
               ),
-              child: (_isForgotPasswordMode)
-                  ? _buildForgotPasswordContent()
-                  : _buildMainContent(),
+              child: (_isForgotPasswordMode) ? _buildForgotPasswordContent() : _buildMainContent(),
             ),
           ),
         ),
@@ -358,8 +351,7 @@ class _AuthScreenState extends State<AuthScreen> {
       ),
       hintText: 'Enter your e-mail',
       validator: (val) {
-        return RegExp(
-                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                 .hasMatch(val)
             ? null
             : "Please Enter Correct Email";
@@ -404,9 +396,7 @@ class _AuthScreenState extends State<AuthScreen> {
           text: TextSpan(
             children: [
               TextSpan(
-                text: (_isLoginMode
-                    ? 'Don\'t have an Account? '
-                    : 'Already have an Account? '),
+                text: (_isLoginMode ? 'Don\'t have an Account? ' : 'Already have an Account? '),
                 style: TextStyle(
                   color: Colors.black45,
                   fontSize: 13.0,
