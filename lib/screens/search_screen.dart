@@ -158,13 +158,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: UsersContainer(
                     userName: snapshot[CollectionUsers.username],
                     userImageUrl: snapshot[CollectionUsers.imageUrl],
-                    onPressed: () {
-                      _createChatRoom(
-                        searchedUserName: snapshot[CollectionUsers.username],
-                        searchedUserUid: snapshot[CollectionUsers.uid],
-                        searchedUserUrl: snapshot[CollectionUsers.imageUrl],
-                      );
-                    },
+                    onPressed: (snapshot[CollectionUsers.uid] == _loggedInUser.uid)
+                        ? null
+                        : () {
+                            _createChatRoom(
+                              searchedUserName: snapshot[CollectionUsers.username],
+                              searchedUserUid: snapshot[CollectionUsers.uid],
+                              searchedUserUrl: snapshot[CollectionUsers.imageUrl],
+                            );
+                          },
                   ),
                 );
               },
