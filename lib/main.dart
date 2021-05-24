@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vip_chat_app/screens/chat_room_screen.dart';
-import 'package:vip_chat_app/screens/search_screen.dart';
+import 'package:vip_chat_app/screens/chat_screens/chat_room_screens/chat_room_screen.dart';
+import 'package:vip_chat_app/screens/chat_screens/chat_room_screens/search_screen.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
-import 'screens/group_chat_screen.dart';
+import 'screens/chat_screens/group_chat_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';

@@ -3,22 +3,25 @@ import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:vip_chat_app/utilities/constants_firebase.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/chat/message_text_field.dart';
 import 'package:vip_chat_app/widgets/chat/messages_stream.dart';
 import 'package:vip_chat_app/widgets/customized_animated_drawer.dart';
 
-class GroupChatScreen extends StatefulWidget {
-  static const String id = 'group_chat_screen';
-  const GroupChatScreen({Key key, @required this.auth}) : super(key: key);
+class ChatScreen extends StatefulWidget {
+  static const String id = 'chat_screen';
+  const ChatScreen(
+      {Key key, @required this.auth, @required this.documentID, @required this.appBarTitle})
+      : super(key: key);
   final AuthBase auth;
+  final String documentID;
+  final String appBarTitle;
 
   @override
-  _GroupChatScreenState createState() => _GroupChatScreenState();
+  _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _GroupChatScreenState extends State<GroupChatScreen> {
+class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageTextController = TextEditingController();
   final Database _database = Database();
   String _messageText = '';
@@ -32,7 +35,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   Future<void> _sendMessage() async {
     FocusScope.of(context).unfocus();
     try {
-      await _database.uploadMessage(user: _loggedInUser, collectionID: CollectionGroupChat.collectionID, messageText: _messageText);
+      await _database.uploadMessage(
+          user: _loggedInUser, chatRoomId: widget.documentID, messageText: _messageText);
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
     }
@@ -40,7 +44,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       _messageTextController.clear();
       _messageText = '';
     });
-
   }
 
   @override
@@ -60,7 +63,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             ),
             leading: null,
             title: Text(
-              '️GROUP CHAT',
+              widget.appBarTitle,
               style: kAppBarTextStyle,
             ),
           ),
@@ -72,7 +75,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   MessagesStream(
-                    stream: _database.getChatContent(CollectionGroupChat.collectionID),
+                    stream: _database.getChatContent(widget.documentID),
                     loggedInUser: _loggedInUser,
                   ),
                   MessageTextField(

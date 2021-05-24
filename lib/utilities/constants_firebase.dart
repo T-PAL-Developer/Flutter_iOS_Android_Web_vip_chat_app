@@ -17,11 +17,12 @@ class CollectionUsers {
   static const String uid = 'uid';
 }
 
-class CollectionGroupChat {
-  static const String collectionID = 'group_chat';
+class DocumentGroupChat {
+  static const String documentID = 'group_chat';
 }
 
 class CollectionChatsRooms {
+  static const String chats = 'chats';
   static const String collectionID = 'chat_rooms';
   static const String chatRoomId = 'chat_room_id';
   static const String usersUid = 'uid';

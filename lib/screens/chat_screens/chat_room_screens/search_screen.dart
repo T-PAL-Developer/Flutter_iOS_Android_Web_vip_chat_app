@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vip_chat_app/screens/chat_screens/private_chat_screen.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
@@ -57,19 +58,21 @@ class _SearchScreenState extends State<SearchScreen> {
 
   _createChatRoom({String searchedUserUid, String searchedUserUrl, String searchedUserName}) async {
     List<String> usersUid = [_loggedInUser.uid, searchedUserUid];
-    // List<String> usersImagesUrl = [_loggedInUser.photoURL, searchedUserUrl];
-    // List<String> usersNames = [_loggedInUser.photoURL, searchedUserName];
     String chatRoomId = _createChatRoomId(_loggedInUser.uid, searchedUserUid);
 
     Map<String, dynamic> chatRoomUsersInfoMap = {
       CollectionChatsRooms.chatRoomId: chatRoomId,
-      // CollectionChatsRooms.users: usersNames,
-      // CollectionChatsRooms.imagesUrl: usersImagesUrl,
       CollectionChatsRooms.usersUid: usersUid,
     };
     try {
-      await _database.createChatRoom(chatRoomUsersInfoMap, chatRoomId).then((value) =>
-          Navigator.pushNamedAndRemoveUntil(context, ChatRoomScreen.id, (route) => false));
+      await _database.createChatRoom(chatRoomUsersInfoMap, chatRoomId).then(
+            (value) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      PrivateChatScreen(auth: widget.auth, chatRoomID: chatRoomId)),
+            ),
+          );
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
     }

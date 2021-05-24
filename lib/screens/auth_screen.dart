@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
-import 'package:vip_chat_app/screens/group_chat_screen.dart';
+import 'package:vip_chat_app/screens/chat_screens/group_chat_screen.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/buttons/customized_gradient_icon_button.dart';
 import 'package:vip_chat_app/widgets/buttons/customized_gradient_button.dart';
