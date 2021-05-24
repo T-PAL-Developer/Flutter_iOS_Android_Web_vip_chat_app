@@ -32,7 +32,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   Future<void> _sendMessage() async {
     FocusScope.of(context).unfocus();
     try {
-      await _database.uploadMessage(_loggedInUser, _messageText);
+      await _database.uploadMessage(user: _loggedInUser, collectionID: CollectionGroupChat.collectionID, messageText: _messageText);
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
     }
@@ -72,7 +72,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   MessagesStream(
-                    stream: _database.getChatContent(CollectionGroupChat.id),
+                    stream: _database.getChatContent(CollectionGroupChat.collectionID),
                     loggedInUser: _loggedInUser,
                   ),
                   MessageTextField(

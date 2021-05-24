@@ -36,10 +36,10 @@ class MessagesStream extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               itemCount: chatDocs.length,
               itemBuilder: (context, index) => MessageContainer(
-                text: chatDocs[index][CollectionGroupChat.text],
-                sender: chatDocs[index][CollectionGroupChat.sender],
-                currentUser: currentUser == chatDocs[index][CollectionGroupChat.uid],
-                userImageURL: chatDocs[index][CollectionGroupChat.imageUrl],
+                text: chatDocs[index][CollectionChatContent.text],
+                sender: chatDocs[index][CollectionChatContent.sender],
+                currentUser: currentUser == chatDocs[index][CollectionChatContent.uid],
+                userImageURL: chatDocs[index][CollectionChatContent.imageUrl],
               ),
             ),
           );

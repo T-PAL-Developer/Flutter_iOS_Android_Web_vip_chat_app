@@ -1,5 +1,7 @@
-class CollectionGroupChat {
-  static const String id = 'group_chat';
+
+
+
+class CollectionChatContent {
   static const String text = 'text';
   static const String sender = 'sender';
   static const String createdAt = 'time';
@@ -8,18 +10,20 @@ class CollectionGroupChat {
 }
 
 class CollectionUsers {
-  static const String id = 'users';
+  static const String collectionID = 'users';
   static const String username = 'username';
   static const String email = 'email';
   static const String imageUrl = 'image_url';
   static const String uid = 'uid';
 }
 
+class CollectionGroupChat {
+  static const String collectionID = 'group_chat';
+}
+
 class CollectionChatsRooms {
-  static const String id = 'chat_rooms';
+  static const String collectionID = 'chat_rooms';
   static const String chatRoomId = 'chat_room_id';
-  static const String users = 'users';
-  static const String imagesUrl = 'images_url';
   static const String usersUid = 'uid';
 }
 
