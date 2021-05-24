@@ -24,7 +24,7 @@ class UsersContainer extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          Text(userName, style: kWhiteTextStyle),
+          Text(userName.toUpperCase(), style: kWhiteTextStyle),
           Spacer(),
           IconButton(
             color: Colors.white,

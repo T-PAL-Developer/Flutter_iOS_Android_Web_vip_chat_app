@@ -9,8 +9,6 @@ import 'package:vip_chat_app/utilities/constants_firebase.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
 import 'package:vip_chat_app/widgets/search/users_container.dart';
 
-import 'chat_room_screen.dart';
-
 class SearchScreen extends StatefulWidget {
   static const String id = 'search_screen';
   const SearchScreen({Key key, @required this.auth}) : super(key: key);
@@ -23,30 +21,25 @@ class _SearchScreenState extends State<SearchScreen> {
   final Database _database = Database();
   final TextEditingController _searchTextEditingController = TextEditingController();
   QuerySnapshot _searchSnapshot;
+  QuerySnapshot _loggedInUserDataSnapshot;
   User _loggedInUser;
 
   Future<void> _findUser() async {
-    FocusScope.of(context).unfocus();
     try {
+      await _database.getUserByUserUID(_loggedInUser.uid).then(
+        (value) {
+          setState(
+            () {
+              _loggedInUserDataSnapshot = value;
+            },
+          );
+        },
+      );
       await _database.getUserByUsername(_searchTextEditingController.text).then(
         (value) {
           setState(
             () {
               _searchSnapshot = value;
-              if (_searchSnapshot.docs.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'User does not exist. Check spelling (uppercase, lowercase or space)',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    backgroundColor: Theme.of(context).errorColor,
-                    duration: Duration(seconds: 5),
-                  ),
-                );
-              }
             },
           );
         },
@@ -57,12 +50,18 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   _createChatRoom({String searchedUserUid, String searchedUserUrl, String searchedUserName}) async {
-    List<String> usersUid = [_loggedInUser.uid, searchedUserUid];
-    String chatRoomId = _createChatRoomId(_loggedInUser.uid, searchedUserUid);
+    final snapshot = _loggedInUserDataSnapshot.docs[0].data();
+
+    List<String> usersUid = [snapshot[CollectionUsers.uid], searchedUserUid];
+    List<String> usersNames = [snapshot[CollectionUsers.username], searchedUserName];
+    List<String> usersURLs = [snapshot[CollectionUsers.imageUrl], searchedUserUrl];
+    String chatRoomId = _createChatRoomId(snapshot[CollectionUsers.uid], searchedUserUid);
 
     Map<String, dynamic> chatRoomUsersInfoMap = {
       CollectionChatsRooms.chatRoomId: chatRoomId,
       CollectionChatsRooms.usersUid: usersUid,
+      CollectionChatsRooms.username: usersNames,
+      CollectionChatsRooms.imageUrl: usersURLs,
     };
     try {
       await _database.createChatRoom(chatRoomUsersInfoMap, chatRoomId).then(
@@ -125,7 +124,15 @@ class _SearchScreenState extends State<SearchScreen> {
           child: TextField(
             controller: _searchTextEditingController,
             textInputAction: TextInputAction.search,
-            onEditingComplete: _findUser,
+            onEditingComplete: () {
+              FocusScope.of(context).unfocus();
+              _findUser();
+            },
+            onChanged: (value) {
+              Future.delayed(const Duration(seconds: 1), () {
+                _findUser();
+              });
+            },
             style: TextStyle(
               color: Colors.white,
             ),
@@ -156,6 +163,7 @@ class _SearchScreenState extends State<SearchScreen> {
               itemCount: _searchSnapshot.docs.length,
               itemBuilder: (context, index) {
                 final snapshot = _searchSnapshot.docs[index].data();
+
                 return ConstrainedBox(
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   child: UsersContainer(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vip_chat_app/screens/chat_screens/chat_screen.dart';
 import 'package:vip_chat_app/services/auth.dart';
-import 'package:vip_chat_app/utilities/constants_firebase.dart';
 
 class PrivateChatScreen extends StatefulWidget {
   static const String id = 'group_chat_screen';

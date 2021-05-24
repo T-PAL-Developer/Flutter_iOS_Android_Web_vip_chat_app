@@ -21,24 +21,30 @@ class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen>
-    with SingleTickerProviderStateMixin {
+class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
+  // final Database _database = Database();
   bool _showSpinner = false;
-  final Database _database = Database();
   AnimationController _controller;
   Animation _animation;
   Animation _curvedAnimation;
 
   Future<void> _signInAnonymously() async {
     try {
-      final authResult = await widget.auth.signInAnonymously();
-      print('Anonymous sign in success! uid: ${authResult?.uid}');
-      await _database
-          .uploadUserInfo(authResult, kTest_id, kTest_email, kTest_avatarURL)
-          .then(
-            (value) => Navigator.pushNamedAndRemoveUntil(
-                context, GroupChatScreen.id, (route) => false),
-          );
+      await widget.auth
+          .signInWithEmailAndPassword(
+            email: 'test@gmail.com',
+            password: '1234567',
+          )
+          .then((value) =>
+              Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false));
+      // final authResult = await widget.auth.signInAnonymously();
+      // print('Anonymous sign in success! uid: ${authResult?.uid}');
+      // await _database
+      //     .uploadUserInfo(authResult, kTest_id, kTest_email, kTest_avatarURL)
+      //     .then(
+      //       (value) => Navigator.pushNamedAndRemoveUntil(
+      //           context, GroupChatScreen.id, (route) => false),
+      //     );
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
     }
@@ -52,8 +58,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       duration: Duration(seconds: 2),
       vsync: this,
     );
-    _curvedAnimation =
-        CurvedAnimation(parent: _controller, curve: Curves.easeInQuad);
+    _curvedAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInQuad);
     _animation = DecorationTween(
             begin: kBodyBackgroundContainerDecorationReverse,
             end: kBodyBackgroundContainerDecoration)
@@ -148,8 +153,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     title: 'Log In',
                     height: 70,
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
                         return AuthScreen(
                           auth: widget.auth,
                           isLogin: true,
@@ -165,8 +169,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     title: 'Register',
                     height: 70,
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
                         return AuthScreen(
                           auth: widget.auth,
                           isLogin: false,

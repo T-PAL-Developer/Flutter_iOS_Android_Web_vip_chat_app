@@ -1,6 +1,3 @@
-
-
-
 class CollectionChatContent {
   static const String text = 'text';
   static const String sender = 'sender';
@@ -25,7 +22,9 @@ class CollectionChatsRooms {
   static const String chats = 'chats';
   static const String collectionID = 'chat_rooms';
   static const String chatRoomId = 'chat_room_id';
-  static const String usersUid = 'uid';
+  static const String usersUid = 'usersUid';
+  static const String username = 'username';
+  static const String imageUrl = 'image_url';
 }
 
 class Storage {

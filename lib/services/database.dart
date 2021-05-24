@@ -39,6 +39,13 @@ class Database {
     });
   }
 
+  Stream<QuerySnapshot> getPrivateChats(String userUid) {
+    return FirebaseFirestore.instance
+        .collection(CollectionChatsRooms.collectionID)
+        .where(CollectionChatsRooms.usersUid, arrayContains: userUid)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot> getChatContent(String documentID) {
     return FirebaseFirestore.instance
         .collection(CollectionChatsRooms.collectionID)
@@ -51,7 +58,24 @@ class Database {
   Future<QuerySnapshot> getUserByUsername(String username) async {
     return await FirebaseFirestore.instance
         .collection(CollectionUsers.collectionID)
-        .where(CollectionUsers.username, isEqualTo: username)
+        .where(
+          CollectionUsers.username,
+          isGreaterThanOrEqualTo: username.toLowerCase(),
+          // isLessThan: username.toLowerCase().substring(0, username.toLowerCase().length - 1) +
+          //     String.fromCharCode(
+          //         username.toLowerCase().codeUnitAt(username.toLowerCase().length - 1) + 1),
+        )
+        .orderBy(CollectionUsers.username, descending: true)
+        .get()
+        .catchError((e) {
+      print('Error -> Exception details:\n $e');
+    });
+  }
+
+  Future<QuerySnapshot> getUserByUserUID(String userUID) async {
+    return await FirebaseFirestore.instance
+        .collection(CollectionUsers.collectionID)
+        .where(CollectionUsers.uid, isEqualTo: userUID)
         .get()
         .catchError((e) {
       print('Error -> Exception details:\n $e');

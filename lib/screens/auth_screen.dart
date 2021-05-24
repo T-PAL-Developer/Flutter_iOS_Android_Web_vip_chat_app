@@ -46,21 +46,21 @@ class _AuthScreenState extends State<AuthScreen> {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
 
-    if (_userImageFile == null && !_isLoginMode) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Please pick an avatar image',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Theme.of(context).errorColor,
-          duration: Duration(seconds: 5),
-        ),
-      );
-      return;
-    }
+    // if (_userImageFile == null && !_isLoginMode) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text(
+    //         'Please pick an avatar image',
+    //         style: TextStyle(
+    //           color: Colors.white,
+    //         ),
+    //       ),
+    //       backgroundColor: Theme.of(context).errorColor,
+    //       duration: Duration(seconds: 5),
+    //     ),
+    //   );
+    //   return;
+    // }
 
     if (isValid) {
       setState(() {
@@ -79,7 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
       if (_isLoginMode) {
         await widget.auth
             .signInWithEmailAndPassword(
-              email: _email.trim(),
+              email: _email.trim().toLowerCase(),
               password: _password.trim(),
             )
             .then((value) =>
@@ -87,13 +87,20 @@ class _AuthScreenState extends State<AuthScreen> {
       } else {
         await widget.auth
             .createUserWithEmailAndPassword(
-          email: _email.trim(),
+          email: _email.trim().toLowerCase(),
           password: _password.trim(),
         )
             .then(
           (authResult) async {
-            final userImageUrl = await _database.uploadUserImage(authResult, _userImageFile);
-            await _database.uploadUserInfo(authResult, _username, _email, userImageUrl);
+            if (_userImageFile != null) {
+              final userImageUrl = await _database.uploadUserImage(authResult, _userImageFile);
+              await _database.uploadUserInfo(
+                  authResult, _username.toLowerCase(), _email.toLowerCase(), userImageUrl);
+            } else {
+              final userImageUrl = kTest_avatarURL;
+              await _database.uploadUserInfo(
+                  authResult, _username.toLowerCase(), _email.toLowerCase(), userImageUrl);
+            }
             Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false);
           },
         );
@@ -107,8 +114,8 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       await widget.auth.signInWithFacebook().then(
         (authResult) async {
-          _database.uploadUserInfo(
-              authResult, authResult.displayName, authResult.email, authResult.photoURL);
+          _database.uploadUserInfo(authResult, authResult.displayName.toLowerCase(),
+              authResult.email, authResult.photoURL);
           Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false);
         },
       );
