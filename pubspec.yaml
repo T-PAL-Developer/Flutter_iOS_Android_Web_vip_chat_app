@@ -30,10 +30,10 @@ dependencies:
   flutter_button: ^0.0.4
   animated_text_kit: ^3.1.2
   font_awesome_flutter: ^8.11.0
-  firebase_core: ^1.0.0
-  firebase_auth: ^1.0.0
-  firebase_storage: ^8.0.3
-  cloud_firestore: ^1.0.0
+  firebase_core: ^1.1.1
+  firebase_auth: ^1.1.4
+  firebase_storage: ^8.0.6
+  cloud_firestore: ^1.0.7
   flutter_login_facebook: ^1.0.1
   flutter_facebook_login_web: ^0.2.1+1
   modal_progress_hud: ^0.1.3

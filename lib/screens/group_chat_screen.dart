@@ -36,7 +36,11 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);
     }
-    _messageTextController.clear();
+    setState(() {
+      _messageTextController.clear();
+      _messageText = '';
+    });
+
   }
 
   @override
@@ -72,8 +76,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                     loggedInUser: _loggedInUser,
                   ),
                   MessageTextField(
+                    onButtonPressed: _messageText.trim().isEmpty ? null : _sendMessage,
                     messageTextController: _messageTextController,
-                    onSend: _messageText.trim().isEmpty ? null : _sendMessage,
                     onChanged: (value) {
                       setState(
                         () {

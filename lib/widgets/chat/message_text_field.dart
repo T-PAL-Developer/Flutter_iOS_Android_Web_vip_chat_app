@@ -4,12 +4,12 @@ import 'package:vip_chat_app/utilities/constants.dart';
 
 class MessageTextField extends StatelessWidget {
   const MessageTextField(
-      {Key key, @required this.messageTextController, this.onChanged, this.onSend})
+      {Key key, @required this.messageTextController, this.onChanged, this.onButtonPressed})
       : super(key: key);
 
   final TextEditingController messageTextController;
   final Function(String) onChanged;
-  final Function onSend;
+  final Function onButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +29,13 @@ class MessageTextField extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
               onChanged: onChanged,
-              onEditingComplete: onSend,
+              onEditingComplete: onButtonPressed,
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
             child: IconButton(
-              onPressed: onSend,
+              onPressed: onButtonPressed,
               iconSize: 18.0,
               color: kPrimaryColor,
               icon: Icon(FontAwesomeIcons.paperPlane),

@@ -57,14 +57,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   _createChatRoom({String searchedUserUid, String searchedUserUrl, String searchedUserName}) async {
     List<String> usersUid = [_loggedInUser.uid, searchedUserUid];
-    List<String> usersImagesUrl = [_loggedInUser.photoURL, searchedUserUrl];
-    List<String> usersNames = [_loggedInUser.photoURL, searchedUserName];
+    // List<String> usersImagesUrl = [_loggedInUser.photoURL, searchedUserUrl];
+    // List<String> usersNames = [_loggedInUser.photoURL, searchedUserName];
     String chatRoomId = _createChatRoomId(_loggedInUser.uid, searchedUserUid);
 
     Map<String, dynamic> chatRoomUsersInfoMap = {
       CollectionChatsRooms.chatRoomId: chatRoomId,
-      CollectionChatsRooms.users: usersNames,
-      CollectionChatsRooms.imagesUrl: usersImagesUrl,
+      // CollectionChatsRooms.users: usersNames,
+      // CollectionChatsRooms.imagesUrl: usersImagesUrl,
       CollectionChatsRooms.usersUid: usersUid,
     };
     try {
