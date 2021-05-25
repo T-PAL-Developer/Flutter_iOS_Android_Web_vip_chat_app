@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vip_chat_app/screens/chat_screens/chat_screen.dart';
+import 'package:vip_chat_app/screens/chat_screens/chat_view.dart';
 import 'package:vip_chat_app/services/auth.dart';
+import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/utilities/constants_firebase.dart';
+import 'package:vip_chat_app/widgets/customized_animated_drawer.dart';
 
 class GroupChatScreen extends StatefulWidget {
   static const String id = 'group_chat_screen';
@@ -16,7 +18,25 @@ class GroupChatScreen extends StatefulWidget {
 class _GroupChatScreenState extends State<GroupChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return ChatScreen(
-        auth: widget.auth, documentID: DocumentGroupChat.documentID, appBarTitle: 'Group Chat');
+    return CustomizedAnimatedDrawer(
+      authentication: widget.auth,
+      homePageContent: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          leading: null,
+          title: Text(
+            '️Group Chat',
+            style: kAppBarTextStyle,
+          ),
+        ),
+        body: SafeArea(
+          child: ChatView(
+            auth: widget.auth,
+            documentID: DocumentGroupChat.documentID,
+          ),
+        ),
+      ),
+    );
   }
 }

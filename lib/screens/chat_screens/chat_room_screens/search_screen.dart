@@ -65,12 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
     };
     try {
       await _database.createChatRoom(chatRoomUsersInfoMap, chatRoomId).then(
-            (value) => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      PrivateChatScreen(auth: widget.auth, chatRoomID: chatRoomId)),
-            ),
+            (value) => Navigator.pop(context),
           );
     } on FirebaseAuthException catch (e) {
       helperFirebaseAuthException(e, context);

@@ -51,8 +51,10 @@ class ChatsListStream extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => PrivateChatScreen(
-                          auth: Auth(),
-                          chatRoomID: chatsListSnapshot[i][CollectionChatsRooms.chatRoomId]),
+                        auth: Auth(),
+                        appBarName: userName,
+                        chatRoomID: chatsListSnapshot[i][CollectionChatsRooms.chatRoomId],
+                      ),
                     ),
                   );
                 },
