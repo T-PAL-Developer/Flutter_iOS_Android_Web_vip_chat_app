@@ -8,20 +8,10 @@ class ChatsListContainer extends StatelessWidget {
     @required this.userName,
     @required this.userImageUrl,
     this.onPressed,
-    @required this.loggedInUserUid,
-    @required this.secondUserName,
-    @required this.secondUserImageUrl,
-    this.firstUserUid,
-    this.secondUserUid,
   }) : super(key: key);
   final String userName;
   final String userImageUrl;
-  final String secondUserName;
-  final String secondUserImageUrl;
   final Function onPressed;
-  final String loggedInUserUid;
-  final String firstUserUid;
-  final String secondUserUid;
 
   @override
   Widget build(BuildContext context) {
@@ -37,25 +27,15 @@ class ChatsListContainer extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                if (loggedInUserUid != firstUserUid)
-                  CircleAvatar(
-                    radius: 12,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(userImageUrl),
-                  ),
-                if (loggedInUserUid != secondUserUid)
-                  CircleAvatar(
-                    radius: 12,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(secondUserImageUrl),
-                  ),
+                CircleAvatar(
+                  radius: 12,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(userImageUrl),
+                ),
                 SizedBox(
                   width: 10,
                 ),
-                if (loggedInUserUid != firstUserUid)
-                  Text(userName.toUpperCase(), style: kWhiteTextStyle),
-                if (loggedInUserUid != secondUserUid)
-                  Text(secondUserName.toUpperCase(), style: kWhiteTextStyle),
+                Text(userName.toUpperCase(), style: kWhiteTextStyle),
                 Spacer(),
                 IconButton(
                   color: kPrimaryColor,

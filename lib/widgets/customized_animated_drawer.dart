@@ -19,8 +19,7 @@ class CustomizedAnimatedDrawer extends StatefulWidget {
   final AuthBase authentication;
 
   @override
-  _CustomizedAnimatedDrawerState createState() =>
-      _CustomizedAnimatedDrawerState();
+  _CustomizedAnimatedDrawerState createState() => _CustomizedAnimatedDrawerState();
 }
 
 class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
@@ -53,6 +52,7 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
         onTap: () {
           if (HomePageBloc.isOpen)
             setState(() {
+              HomePageBloc.isOpen = false;
               HomePageBloc().closeDrawer();
               ShadowBLOC().closeDrawer();
             });
@@ -125,8 +125,7 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
       child: GestureDetector(
         onTap: () {
           HomePageBloc().closeDrawer();
-          Navigator.pushNamedAndRemoveUntil(
-              context, GroupChatScreen.id, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false);
         },
         child: Row(
           children: [
@@ -158,8 +157,7 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
       child: GestureDetector(
         onTap: () {
           HomePageBloc().closeDrawer();
-          Navigator.pushNamedAndRemoveUntil(
-              context, ChatRoomScreen.id, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, ChatRoomScreen.id, (route) => false);
         },
         child: Row(
           children: [
@@ -191,8 +189,7 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
       child: GestureDetector(
         onTap: () {
           widget.authentication.signOut();
-          Navigator.pushNamedAndRemoveUntil(
-              context, WelcomeScreen.id, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.id, (route) => false);
         },
         child: Row(
           children: [

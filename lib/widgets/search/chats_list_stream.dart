@@ -29,31 +29,64 @@ class ChatsListStream extends StatelessWidget {
           );
         }
         if (snapshot.hasData) {
-          final chatsList = snapshot.data.docs;
+          final chatsListSnapshot = snapshot.data.docs;
+          List<ChatsListContainer> chatsListContainerWidgets = [];
 
-          return Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              itemCount: chatsList.length,
-              itemBuilder: (context, index) => ChatsListContainer(
-                loggedInUserUid: loggedInUser.uid,
-                firstUserUid: chatsList[index][CollectionChatsRooms.usersUid][0],
-                secondUserUid: chatsList[index][CollectionChatsRooms.usersUid][1],
-                userName: chatsList[index][CollectionChatsRooms.username][0],
-                userImageUrl: chatsList[index][CollectionChatsRooms.imageUrl][0],
-                secondUserName: chatsList[index][CollectionChatsRooms.username][1],
-                secondUserImageUrl: chatsList[index][CollectionChatsRooms.imageUrl][1],
+          for (int i = 0; i < chatsListSnapshot.length; i++) {
+            final List userUidList = chatsListSnapshot[i][CollectionChatsRooms.usersUid];
+            final List userNameList = chatsListSnapshot[i][CollectionChatsRooms.username];
+            final List userImageUrlList = chatsListSnapshot[i][CollectionChatsRooms.imageUrl];
+            for (int i = 0; i < userUidList.length; i++) {
+              final userUid = userUidList[i];
+              if (userUid == loggedInUser.uid) {
+                continue;
+              }
+              final userName = userNameList[i];
+              final userImageUrl = userImageUrlList[i];
+              final chatsListContainer = ChatsListContainer(
+                userName: userName,
+                userImageUrl: userImageUrl,
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PrivateChatScreen(
-                            auth: Auth(),
-                            chatRoomID: chatsList[index][CollectionChatsRooms.chatRoomId])),
+                      builder: (context) => PrivateChatScreen(
+                          auth: Auth(),
+                          chatRoomID: chatsListSnapshot[i][CollectionChatsRooms.chatRoomId]),
+                    ),
                   );
                 },
-              ),
+              );
+
+              chatsListContainerWidgets.add(chatsListContainer);
+            }
+          }
+          return Expanded(
+            child: ListView(
+              children: chatsListContainerWidgets,
             ),
+            // child: ListView.builder(
+            //   padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+            //   itemCount: chatsList.length,
+            //   itemBuilder: (context, index) => ChatsListContainer(
+            //     loggedInUserUid: loggedInUser.uid,
+            //     firstUserUid: chatsList[index][CollectionChatsRooms.usersUid][0],
+            //     secondUserUid: chatsList[index][CollectionChatsRooms.usersUid][1],
+            //     userName: chatsList[index][CollectionChatsRooms.username][0],
+            //     userImageUrl: chatsList[index][CollectionChatsRooms.imageUrl][0],
+            //     secondUserName: chatsList[index][CollectionChatsRooms.username][1],
+            //     secondUserImageUrl: chatsList[index][CollectionChatsRooms.imageUrl][1],
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => PrivateChatScreen(
+            //                 auth: Auth(),
+            //                 chatRoomID: chatsList[index][CollectionChatsRooms.chatRoomId])),
+            //       );
+            //     },
+            //   ),
+            // ),
           );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error.toString()}');
