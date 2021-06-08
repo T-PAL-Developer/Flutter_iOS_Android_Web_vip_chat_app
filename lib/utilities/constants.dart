@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 //TEST USER
-const String kTest_id = 'Anonymous user';
-const String kTest_email = 'test@test.test';
+const String kTest_email = 'test@gmail.com';
+const String kTest_password = '1234567';
 const String kTest_avatarURL =
     'https://firebasestorage.googleapis.com/v0/b/vip-chatt.appspot.com/o/user_image%2FFu2d3jPaZbdv9PDIdlQEzqU4pho1?alt=media&token=e1ff37fe-932e-4904-9c89-82eac0553ecc';
 
@@ -22,8 +22,7 @@ const kFloatingActionButtonThemeData = FloatingActionButtonThemeData(
   backgroundColor: kPrimaryColor,
 );
 const kTextTheme = TextTheme(
-  bodyText2: TextStyle(
-      color: Colors.black54, fontSize: 14, fontWeight: FontWeight.normal),
+  bodyText2: TextStyle(color: Colors.black54, fontSize: 14, fontWeight: FontWeight.normal),
 );
 final kElevatedButtonThemeData = ElevatedButtonThemeData(
   style: ElevatedButton.styleFrom(
@@ -42,10 +41,8 @@ const kAppBarTheme = AppBarTheme(
 );
 
 // APPBAR
-const kAppBarTextStyle = TextStyle(
-    fontFamily: kFontBungeeShade,
-    fontWeight: FontWeight.bold,
-    color: Colors.black);
+const kAppBarTextStyle =
+    TextStyle(fontFamily: kFontBungeeShade, fontWeight: FontWeight.bold, color: Colors.black);
 
 // DRAWER
 const kAnimatedDrawerMenuTextStyle = TextStyle(

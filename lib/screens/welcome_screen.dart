@@ -32,8 +32,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     try {
       await widget.auth
           .signInWithEmailAndPassword(
-            email: 'test@gmail.com',
-            password: '1234567',
+            email: kTest_email,
+            password: kTest_password,
           )
           .then((value) =>
               Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false));

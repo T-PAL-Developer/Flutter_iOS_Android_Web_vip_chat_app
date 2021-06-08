@@ -36,6 +36,7 @@ class ChatsListStream extends StatelessWidget {
             final List userUidList = chatsListSnapshot[i][CollectionChatsRooms.usersUid];
             final List userNameList = chatsListSnapshot[i][CollectionChatsRooms.username];
             final List userImageUrlList = chatsListSnapshot[i][CollectionChatsRooms.imageUrl];
+            final String usersChatsList = chatsListSnapshot[i][CollectionChatsRooms.chatRoomId];
             for (int i = 0; i < userUidList.length; i++) {
               final userUid = userUidList[i];
               if (userUid == loggedInUser.uid) {
@@ -53,7 +54,7 @@ class ChatsListStream extends StatelessWidget {
                       builder: (context) => PrivateChatScreen(
                         auth: Auth(),
                         appBarName: userName,
-                        chatRoomID: chatsListSnapshot[i][CollectionChatsRooms.chatRoomId],
+                        chatRoomID: usersChatsList,
                       ),
                     ),
                   );

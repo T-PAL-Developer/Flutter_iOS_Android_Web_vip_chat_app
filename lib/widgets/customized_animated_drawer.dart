@@ -52,7 +52,6 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
         onTap: () {
           if (HomePageBloc.isOpen)
             setState(() {
-              HomePageBloc.isOpen = false;
               HomePageBloc().closeDrawer();
               ShadowBLOC().closeDrawer();
             });
