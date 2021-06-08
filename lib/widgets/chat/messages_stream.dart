@@ -40,6 +40,7 @@ class MessagesStream extends StatelessWidget {
                 sender: chatDocs[index][CollectionChatContent.sender],
                 currentUser: currentUser == chatDocs[index][CollectionChatContent.uid],
                 userImageURL: chatDocs[index][CollectionChatContent.imageUrl],
+                date: chatDocs[index][CollectionChatContent.createdAt],
               ),
             ),
           );
