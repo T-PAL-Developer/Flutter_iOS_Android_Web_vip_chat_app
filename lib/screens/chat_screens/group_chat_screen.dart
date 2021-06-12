@@ -5,6 +5,7 @@ import 'package:vip_chat_app/services/push_notifications.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/utilities/constants_firebase.dart';
 import 'package:vip_chat_app/widgets/customized_animated_drawer.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GroupChatScreen extends StatefulWidget {
   static const String id = 'group_chat_screen';
@@ -24,7 +25,9 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     super.initState();
     _firebaseCloudMessaging.fcmRequestPermission();
     _firebaseCloudMessaging.fcmForegroundNotification();
-    _firebaseCloudMessaging.fcmSubscribeToTopic();
+    if (!kIsWeb) {
+      _firebaseCloudMessaging.fcmSubscribeToTopic();
+    }
   }
 
   @override
