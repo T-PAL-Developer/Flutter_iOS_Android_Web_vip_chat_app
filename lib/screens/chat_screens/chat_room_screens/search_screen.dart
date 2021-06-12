@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vip_chat_app/screens/chat_screens/private_chat_screen.dart';
 import 'package:vip_chat_app/services/auth.dart';
 import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';

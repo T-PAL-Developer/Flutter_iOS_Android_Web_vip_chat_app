@@ -68,7 +68,7 @@ class MessageContainer extends StatelessWidget {
                             Text(
                               text ?? 'Text display error',
                               style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 16,
                                   fontFamily: kFontSourceSansPro,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black),

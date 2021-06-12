@@ -2,7 +2,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vip_chat_app/services/auth.dart';
-import 'package:vip_chat_app/services/database.dart';
 import 'package:vip_chat_app/utilities/constants.dart';
 import 'package:vip_chat_app/screens/chat_screens/group_chat_screen.dart';
 import 'package:vip_chat_app/utilities/firebase_error_codes.dart';
