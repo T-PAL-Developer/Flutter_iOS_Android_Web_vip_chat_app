@@ -1,10 +1,18 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class FirebaseCloudMessaging {
-  fcmRequestPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
-    await messaging
+  fcmGetToken() async {
+    _messaging.getToken();
+  }
+
+  fcmSubscribeToTopic() {
+    _messaging.subscribeToTopic('chat_rooms');
+  }
+
+  fcmRequestPermission() async {
+    await _messaging
         .requestPermission(
       alert: true,
       announcement: false,
@@ -15,14 +23,14 @@ class FirebaseCloudMessaging {
       sound: true,
     )
         .then((value) async {
-      NotificationSettings settings = await messaging.getNotificationSettings();
+      NotificationSettings settings = await _messaging.getNotificationSettings();
       print('User granted permission: ${settings.authorizationStatus}');
       return settings;
     });
   }
 
   fcmForegroundNotification() async {
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    await _messaging.setForegroundNotificationPresentationOptions(
       alert: true, // Required to display a heads up notification
       badge: true,
       sound: true,

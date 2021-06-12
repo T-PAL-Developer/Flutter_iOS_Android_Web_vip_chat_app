@@ -24,6 +24,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     super.initState();
     _firebaseCloudMessaging.fcmRequestPermission();
     _firebaseCloudMessaging.fcmForegroundNotification();
+    _firebaseCloudMessaging.fcmSubscribeToTopic();
   }
 
   @override
