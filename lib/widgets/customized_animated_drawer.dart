@@ -4,6 +4,7 @@ import 'package:animated_drawer/views/animated_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vip_chat_app/screens/chat_screens/chat_room_screens/chat_room_screen.dart';
 import 'package:vip_chat_app/screens/chat_screens/group_chat_screen.dart';
 import 'package:vip_chat_app/screens/welcome_screen.dart';
@@ -22,7 +23,12 @@ class CustomizedAnimatedDrawer extends StatefulWidget {
   _CustomizedAnimatedDrawerState createState() => _CustomizedAnimatedDrawerState();
 }
 
+const _url = 'https://tpal.com.pl';
+
 class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
+  void _launchURL() async =>
+      await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
+
   @override
   Widget build(BuildContext context) {
     return AnimatedDrawer(
@@ -212,7 +218,7 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () {},
+        onTap: _launchURL,
         child: Row(
           children: [
             FaIcon(
