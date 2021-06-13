@@ -61,9 +61,9 @@ class Database {
         .where(
           CollectionUsers.username,
           isGreaterThanOrEqualTo: username.toLowerCase(),
-          // isLessThan: username.toLowerCase().substring(0, username.toLowerCase().length - 1) +
-          //     String.fromCharCode(
-          //         username.toLowerCase().codeUnitAt(username.toLowerCase().length - 1) + 1),
+          isLessThan: username.toLowerCase().substring(0, username.toLowerCase().length - 1) +
+              String.fromCharCode(
+                  username.toLowerCase().codeUnitAt(username.toLowerCase().length - 1) + 1),
         )
         .orderBy(CollectionUsers.username, descending: true)
         .get()
