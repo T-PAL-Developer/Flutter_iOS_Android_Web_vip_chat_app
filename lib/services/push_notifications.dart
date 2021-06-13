@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:vip_chat_app/utilities/constants_firebase.dart';
 
 class FirebaseCloudMessaging {
   FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -8,7 +9,7 @@ class FirebaseCloudMessaging {
   }
 
   fcmSubscribeToTopic() {
-    _messaging.subscribeToTopic('chat_rooms');
+    _messaging.subscribeToTopic(CollectionChatsRooms.collectionID);
   }
 
   fcmRequestPermission() async {
@@ -31,9 +32,9 @@ class FirebaseCloudMessaging {
 
   fcmForegroundNotification() async {
     await _messaging.setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
-      badge: true,
-      sound: true,
+      alert: false, // Required to display a heads up notification
+      badge: false,
+      sound: false,
     );
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

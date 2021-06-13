@@ -12,6 +12,7 @@ exports.myFunction = functions.firestore
           title: "VIP CHAT",
           body: "You have a new message",
           clickAction: "FLUTTER_NOTIFICATION_CLICK",
+          sound: "default",
         },
       });
     });
