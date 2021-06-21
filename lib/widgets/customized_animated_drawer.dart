@@ -23,11 +23,11 @@ class CustomizedAnimatedDrawer extends StatefulWidget {
   _CustomizedAnimatedDrawerState createState() => _CustomizedAnimatedDrawerState();
 }
 
-const _url = 'https://tpal.com.pl';
+const _appInfoURL = 'https://tpal.com.pl/#vipchat';
 
 class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
-  void _launchURL() async =>
-      await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
+  void _launchURL(String url) async =>
+      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +218,9 @@ class _CustomizedAnimatedDrawerState extends State<CustomizedAnimatedDrawer> {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: _launchURL,
+        onTap: () {
+          _launchURL(_appInfoURL);
+        },
         child: Row(
           children: [
             FaIcon(
