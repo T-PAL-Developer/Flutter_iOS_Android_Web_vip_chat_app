@@ -12,6 +12,9 @@ class CustomizedTextFormField extends StatelessWidget {
     this.controller,
     this.onSaved,
     this.key,
+    this.focusNode,
+    this.onEditingComplete,
+    this.textInputAction,
   });
 
   final String hintText;
@@ -23,6 +26,9 @@ class CustomizedTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onSaved;
   final ValueKey key;
+  final FocusNode focusNode;
+  final Function onEditingComplete;
+  final TextInputAction textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +48,15 @@ class CustomizedTextFormField extends StatelessWidget {
         ),
         child: TextFormField(
           key: key ?? null,
+          focusNode: focusNode ?? null,
           onSaved: onSaved ?? null,
           controller: controller ?? null,
           validator: validator ?? null,
           keyboardType: keyboardType ?? TextInputType.text,
+          textInputAction: textInputAction ?? TextInputAction.next,
           obscureText: obscureText ?? false,
           onChanged: onChanged ?? null,
+          onEditingComplete: onEditingComplete ?? null,
           style: TextStyle(
             color: Colors.black,
           ),
@@ -75,8 +84,7 @@ class CustomizedTextFormField extends StatelessWidget {
               fontWeight: FontWeight.normal,
               color: Colors.black45,
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white, width: 0.0),
               borderRadius: BorderRadius.all(Radius.circular(32.0)),

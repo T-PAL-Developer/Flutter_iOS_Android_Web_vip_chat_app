@@ -33,13 +33,32 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _showSpinner = false;
   bool _isLoginMode = false;
   bool _isForgotPasswordMode = false;
-  String _username;
-  String _email;
-  String _password;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _usernameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
   Uint8List _userImageFile;
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _usernameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   void _pickedImage(Uint8List pickedImage) {
     _userImageFile = pickedImage;
+  }
+
+  void _focusOnEditingComplete(FocusNode requestFocus) {
+    FocusScope.of(context).requestFocus(requestFocus);
   }
 
   Future<void> _trySubmit() async {
@@ -79,27 +98,27 @@ class _AuthScreenState extends State<AuthScreen> {
       if (_isLoginMode) {
         await widget.auth
             .signInWithEmailAndPassword(
-              email: _email.trim().toLowerCase(),
-              password: _password.trim(),
+              email: _emailController.text.trim().toLowerCase(),
+              password: _passwordController.text.trim(),
             )
             .then((value) =>
                 Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false));
       } else {
         await widget.auth
             .createUserWithEmailAndPassword(
-          email: _email.trim().toLowerCase(),
-          password: _password.trim(),
+          email: _emailController.text.trim().toLowerCase(),
+          password: _passwordController.text.trim(),
         )
             .then(
           (authResult) async {
             if (_userImageFile != null) {
               final userImageUrl = await _database.uploadUserImage(authResult, _userImageFile);
-              await _database.uploadUserInfo(
-                  authResult, _username.toLowerCase(), _email.toLowerCase(), userImageUrl);
+              await _database.uploadUserInfo(authResult, _usernameController.text.toLowerCase(),
+                  _emailController.text.toLowerCase(), userImageUrl);
             } else {
               final userImageUrl = kTest_avatarURL;
-              await _database.uploadUserInfo(
-                  authResult, _username.toLowerCase(), _email.toLowerCase(), userImageUrl);
+              await _database.uploadUserInfo(authResult, _usernameController.text.toLowerCase(),
+                  _emailController.text.toLowerCase(), userImageUrl);
             }
             Navigator.pushNamedAndRemoveUntil(context, GroupChatScreen.id, (route) => false);
           },
@@ -127,7 +146,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<bool> _resetPassword() async {
     try {
       await widget.auth.resetPassword(
-        email: _email.trim(),
+        email: _emailController.text.trim(),
       );
       return true;
     } on FirebaseAuthException catch (e) {
@@ -315,6 +334,7 @@ class _AuthScreenState extends State<AuthScreen> {
           if (!_isLoginMode)
             CustomizedTextFormField(
               key: ValueKey('name'),
+              focusNode: _usernameFocusNode,
               icon: Icon(
                 Icons.person,
                 color: Colors.black45,
@@ -324,12 +344,14 @@ class _AuthScreenState extends State<AuthScreen> {
                 return val.length > 3 ? null : "Enter 3+ characters";
               },
               onChanged: (value) {
-                _username = value;
+                _usernameController.text = value;
               },
+              onEditingComplete: () => _focusOnEditingComplete(_emailFocusNode),
             ),
           _buildEmailTextField(),
           CustomizedTextFormField(
             key: ValueKey('password'),
+            focusNode: _passwordFocusNode,
             icon: Icon(
               Icons.lock,
               color: Colors.black45,
@@ -340,8 +362,9 @@ class _AuthScreenState extends State<AuthScreen> {
               return val.length > 6 ? null : "Enter Password 6+ characters";
             },
             onChanged: (value) {
-              _password = value;
+              _passwordController.text = value;
             },
+            onEditingComplete: _trySubmit,
           ),
         ],
       ),
@@ -351,6 +374,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _buildEmailTextField() {
     return CustomizedTextFormField(
       key: ValueKey('email'),
+      focusNode: _emailFocusNode,
       keyboardType: TextInputType.emailAddress,
       icon: Icon(
         Icons.email,
@@ -364,8 +388,9 @@ class _AuthScreenState extends State<AuthScreen> {
             : "Please Enter Correct Email";
       },
       onChanged: (value) {
-        _email = value;
+        _emailController.text = value;
       },
+      onEditingComplete: () => _focusOnEditingComplete(_passwordFocusNode),
     );
   }
 

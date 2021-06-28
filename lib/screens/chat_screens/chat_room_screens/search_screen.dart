@@ -23,6 +23,12 @@ class _SearchScreenState extends State<SearchScreen> {
   QuerySnapshot _loggedInUserDataSnapshot;
   User _loggedInUser;
 
+  @override
+  void dispose() {
+    _searchTextEditingController.dispose();
+    super.dispose();
+  }
+
   Future<void> _findUser() async {
     try {
       await _database.getUserByUserUID(_loggedInUser.uid).then(

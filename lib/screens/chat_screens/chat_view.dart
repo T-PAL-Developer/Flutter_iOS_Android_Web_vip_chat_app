@@ -22,9 +22,16 @@ class _ChatViewState extends State<ChatView> {
   String _messageText = '';
   User _loggedInUser;
 
+  @override
   void initState() {
     super.initState();
     _loggedInUser = widget.auth.currentUser;
+  }
+
+  @override
+  void dispose() {
+    _messageTextController.dispose();
+    super.dispose();
   }
 
   Future<void> _sendMessage() async {
